@@ -674,6 +674,38 @@ section { padding: 120px 5%; }
   align-items: center;
   justify-content: center;
 }
+   .stats-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+    padding:20px;
+}
+
+.stat-card{
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(212,175,55,0.4);
+    border-radius:16px;
+    padding:25px 15px;
+    text-align:center;
+    transition:0.3s ease;
+}
+
+.stat-card:hover{
+    transform:translateY(-5px);
+    border-color:#D4AF37;
+}
+
+.stat-number{
+    font-size:2rem;
+    font-weight:700;
+    color:#D4AF37;
+    margin-bottom:10px;
+}
+
+.stat-title{
+    font-size:0.9rem;
+    color:#ffffff;
+}
 .about-img-placeholder {
   width: 100%; height: 100%;
   background: linear-gradient(160deg, #1a1a1a, #111);
@@ -1876,11 +1908,29 @@ style="width:120%;height:120%;object-fit:cover;object-position:center top;">
       <div class="about-visual reveal">
         <div class="about-accent-line"></div>
         <div class="about-img-frame">
-          <div class="about-img-placeholder">
-    <div style="font-size:5rem">🎨</div>
-    <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--gold)">Creative Vision</div>
+           <div class="stats-grid">
+
+    <div class="stat-card">
+        <div class="stat-number">1300+</div>
+        <div class="stat-title">Projects Completed</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-number">740+</div>
+        <div class="stat-title">Fiverr Orders</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-number">100%</div>
+        <div class="stat-title">On-Time Delivery</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-number">$10.9K+</div>
+        <div class="stat-title">Revenue Generated</div>
+    </div>
 </div>
-          </div>
+      </div>
         </div>
         <div class="about-badge">
           <div class="about-badge-num">5★</div>
