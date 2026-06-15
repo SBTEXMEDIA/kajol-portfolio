@@ -129,6 +129,23 @@ ul { list-style: none; }
   opacity: 0;
   animation: loaderFade 0.8s 0.2s var(--ease-out-expo) forwards;
 }
+   .loader-logo img{
+    width:120px;
+    height:auto;
+    display:block;
+    margin:0 auto 15px;
+}
+
+.loader-text{
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    text-align: center;
+    opacity: 0;
+    animation: loaderFade 0.8s 0.4s var(--ease-out-expo) forwards;
+}
 .loader-bar-wrap {
   width: 200px;
   height: 1px;
@@ -1812,12 +1829,18 @@ footer {
 <div class="loader-logo">
     <img src="logo.png" alt="SBTEXMEDIA Logo">
 </div>
- 
-  <div style="font-family:'Cormorant Garamond',serif;font-style:italic;color:rgba(212,175,55,0.6);font-size:0.85rem;letter-spacing:0.2em;opacity:0;animation:loaderFade 0.6s 0.7s forwards;">Premium Creative Studio</div>
-  <div class="loader-bar-wrap">
+
+<div class="loader-text">SBTEXMEDIA</div>
+
+<div style="font-family:'Cormorant Garamond',serif;font-style:italic;color:rgba(212,175,55,0.6);font-size:0.85rem;">
+    Premium Creative Studio
+</div>
+
+<div class="loader-bar-wrap">
     <div class="loader-bar"></div>
-  </div>
-  <div class="loader-pct" id="loaderPct">Loading Experience...</div>
+</div>
+
+<div class="loader-pct" id="loaderPct">Loading Experience...</div>
 </div>
 
 <!-- ─── NAV ─── -->
