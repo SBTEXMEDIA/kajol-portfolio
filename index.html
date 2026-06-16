@@ -2921,8 +2921,8 @@ function openModal(title, cat, desc, image) {
   document.getElementById('modalTitle').textContent = title;
   document.getElementById('modalCat').textContent = cat.toUpperCase();
   document.getElementById('modalDesc').textContent = desc;
-   document.getElementById('modalImage').src = image;
-   document.getElementById('modalImage').style.display = 'block';
+  document.getElementById('modalImage').src = image;
+  document.getElementById('modalImage').style.display = 'block';
   document.getElementById('modalImg').textContent = catEmojis[cat] || '🎨';
   document.getElementById('modalOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
