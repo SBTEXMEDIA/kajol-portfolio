@@ -2299,6 +2299,15 @@ style="width:120%;height:120%;object-fit:cover;object-position:center top;">
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal()">✕</button>
     <div class="modal-img" id="modalImg">📋</div>
+     <img id="modalImage"
+     src=""
+     alt="Portfolio Project"
+     style="width:100%;
+            max-height:350px;
+            object-fit:cover;
+            border-radius:12px;
+            margin-bottom:20px;
+            display:none;">
     <div class="modal-content">
       <div style="font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;" id="modalCat">PDF Editing</div>
       <h3 style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;margin-bottom:16px;" id="modalTitle">Project Title</h3>
@@ -2906,10 +2915,12 @@ document.getElementById('portfolioSearch').addEventListener('input', function() 
 
 /* ══ MODAL ══ */
 const catEmojis = { pdf: '📋', design: '📱', logo: '💎', vector: '🖊️', editing: '📸', data: '📊' };
-function openModal(title, cat, desc) {
+function openModal(title, cat, desc, image) {
   document.getElementById('modalTitle').textContent = title;
   document.getElementById('modalCat').textContent = cat.toUpperCase();
   document.getElementById('modalDesc').textContent = desc;
+   document.getElementById('modalImage').src = image;
+   document.getElementById('modalImage').style.display = 'block';
   document.getElementById('modalImg').textContent = catEmojis[cat] || '🎨';
   document.getElementById('modalOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
