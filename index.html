@@ -2918,12 +2918,23 @@ document.getElementById('portfolioSearch').addEventListener('input', function() 
 /* ══ MODAL ══ */
 const catEmojis = { pdf: '📋', design: '📱', logo: '💎', vector: '🖊️', editing: '📸', data: '📊' };
 function openModal(title, cat, desc, image) {
+
+  console.log("modalTitle", document.getElementById('modalTitle'));
+  console.log("modalCat", document.getElementById('modalCat'));
+  console.log("modalDesc", document.getElementById('modalDesc'));
+  console.log("modalImage", document.getElementById('modalImage'));
+  console.log("modalImg", document.getElementById('modalImg'));
+
   document.getElementById('modalTitle').textContent = title;
   document.getElementById('modalCat').textContent = cat.toUpperCase();
   document.getElementById('modalDesc').textContent = desc;
+
   document.getElementById('modalImage').src = image;
   document.getElementById('modalImage').style.display = 'block';
-  document.getElementById('modalImg').textContent = catEmojis[cat] || '🎨';
+
+  document.getElementById('modalImg').textContent =
+  catEmojis[cat] || '🎨';
+
   document.getElementById('modalOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
