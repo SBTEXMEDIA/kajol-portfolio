@@ -2792,19 +2792,20 @@ View Case Study
       <div class="contact-form reveal">
         <h3 style="font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:8px;">Send a Message</h3>
         <p style="font-size:0.78rem;color:var(--white-60);margin-bottom:28px;">I respond within a few hours. Let's discuss your project.</p>
+        <form id="contactForm" action="https://formspree.io/f/mqevkbll" method="POST">
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Name</label>
-            <input type="text" class="form-input" placeholder="Your Name">
+            <input type="text" name="Name" class="form-input" placeholder="Your Name" required>
           </div>
           <div class="form-group">
             <label class="form-label">Email</label>
-            <input type="email" class="form-input" placeholder="your@email.com">
+            <input type="email" name="Email" class="form-input" placeholder="your@email.com" required>
           </div>
         </div>
         <div class="form-group full">
           <label class="form-label">Service Needed</label>
-          <select class="form-select">
+          <select name="Service Needed" class="form-select">
             <option value="">Select a service...</option>
             <option>PDF Editing</option>
             <option>Fillable PDF Forms Or Google Forms</option>
@@ -2820,7 +2821,7 @@ View Case Study
         </div>
         <div class="form-group full">
           <label class="form-label">Budget Range</label>
-          <select class="form-select">
+          <select name="Budget Range" class="form-select">
             <option value="">Select budget...</option>
             <option>Under $50</option>
             <option>$50 – $150</option>
@@ -2830,9 +2831,10 @@ View Case Study
         </div>
         <div class="form-group full">
           <label class="form-label">Project Details</label>
-          <textarea class="form-textarea" placeholder="Describe your project, requirements, and any relevant details..."></textarea>
+          <textarea name="Project Details" class="form-textarea" placeholder="Describe your project, requirements, and any relevant details..." required></textarea>
         </div>
-        <button class="form-submit" onclick="handleFormSubmit()">Send Message ✦</button>
+        <button type="submit" class="form-submit">Send Message ✦</button>
+        </form>
       </div>
     </div>
   </div>
@@ -3225,11 +3227,49 @@ modeBtn.addEventListener('click', () => {
   modeBtn.textContent = isDark ? '🌙' : '☀️';
 });
 
-/* ══ FORM SUBMIT ══ */
-function handleFormSubmit() {
-  const toast = document.getElementById('toast');
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 4000);
+/* ══ FORM SUBMIT (Formspree) ══ */
+const contactForm = document.getElementById('contactForm');
+if (contactForm) {
+  contactForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const btn = contactForm.querySelector('.form-submit');
+    const originalText = btn.textContent;
+    const toast = document.getElementById('toast');
+    const toastTitle = toast.querySelector('.toast-title');
+    const toastMsg = toast.querySelector('.toast-msg');
+
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+
+    try {
+      const response = await fetch(contactForm.action, {
+        method: 'POST',
+        body: new FormData(contactForm),
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (response.ok) {
+        // Success: show toast + clear all fields
+        toastTitle.textContent = '✓ Message Sent!';
+        toastMsg.textContent = "I'll respond within 2–4 hours.";
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 4000);
+        contactForm.reset();
+      } else {
+        throw new Error('Submission failed');
+      }
+    } catch (err) {
+      // Error: let the visitor know it didn't go through
+      toastTitle.textContent = '✕ Something went wrong';
+      toastMsg.textContent = 'Please try again or email me directly.';
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 4000);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = originalText;
+    }
+  });
 }
 
 /* ══ SMOOTH ACTIVE NAV ══ */
