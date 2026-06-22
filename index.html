@@ -1227,6 +1227,146 @@ section { padding: 120px 5%; }
 .modal-close:hover { border-color: var(--gold); color: var(--gold); }
 .modal-box { position: relative; }
 
+/* ══ GALLERY SLIDER (Interactive Business Form) ══ */
+.modal-gallery {
+  position: relative;
+  margin-bottom: 16px;
+}
+.modal-gallery-img {
+  width: 100%;
+  height: auto;
+  max-height: 500px;
+  object-fit: contain;
+  border-radius: 12px;
+  border: 1px solid rgba(212,175,55,.3);
+  background: #111;
+  display: block;
+}
+.gallery-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: rgba(10,10,10,0.7);
+  backdrop-filter: blur(8px);
+  color: var(--gold);
+  font-size: 1.6rem;
+  line-height: 1;
+  display: none;            /* shown only in gallery mode via JS */
+  align-items: center;
+  justify-content: center;
+  cursor: none;
+  transition: all var(--transition-fast);
+  z-index: 3;
+}
+.gallery-nav:hover { background: var(--gold); color: var(--black); border-color: var(--gold); }
+.gallery-prev { left: 14px; }
+.gallery-next { right: 14px; }
+.gallery-counter {
+  position: absolute;
+  bottom: 14px; right: 14px;
+  background: rgba(10,10,10,0.75);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border);
+  color: var(--gold);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  padding: 4px 12px;
+  border-radius: 20px;
+  display: none;            /* shown only in gallery mode via JS */
+  z-index: 3;
+}
+/* Thumbnails */
+.gallery-thumbs {
+  display: none;            /* shown only in gallery mode via JS */
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  margin-bottom: 24px;
+  scrollbar-width: thin;
+}
+.gallery-thumbs::-webkit-scrollbar { height: 4px; }
+.gallery-thumbs::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+.gallery-thumb {
+  flex: 0 0 auto;
+  width: 72px; height: 54px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid var(--glass-border);
+  opacity: 0.5;
+  cursor: none;
+  transition: opacity var(--transition-fast), border-color var(--transition-fast);
+}
+.gallery-thumb:hover { opacity: 0.85; }
+.gallery-thumb.active { opacity: 1; border-color: var(--gold); box-shadow: var(--shadow-gold); }
+
+/* ══ PROJECT INFO PANEL ══ */
+.project-info {
+  display: none;            /* shown only in gallery mode via JS */
+  margin-bottom: 32px;
+}
+.project-info-grid {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  padding: 8px 20px;
+  margin-bottom: 20px;
+}
+.project-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--white-10);
+}
+.project-info-row:last-child { border-bottom: none; }
+.pi-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--white-60);
+}
+.pi-value {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--white);
+  text-align: right;
+}
+.pi-gold { color: var(--gold); font-weight: 600; }
+.pf-title {
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
+.pf-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.pf-item {
+  font-size: 0.8rem;
+  color: var(--white-80);
+  background: var(--gold-glow);
+  border: 1px solid rgba(212,175,55,0.25);
+  border-radius: 20px;
+  padding: 7px 16px;
+}
+
+/* ══ GALLERY RESPONSIVE ══ */
+@media (max-width: 600px) {
+  .gallery-nav { width: 38px; height: 38px; font-size: 1.3rem; }
+  .gallery-prev { left: 8px; }
+  .gallery-next { right: 8px; }
+  .gallery-thumb { width: 60px; height: 44px; }
+  .project-info-row { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .pi-value { text-align: left; }
+  .pf-item { font-size: 0.74rem; padding: 6px 12px; }
+}
+
 /* ═══════════════════════════════════════════
    TESTIMONIALS
 ═══════════════════════════════════════════ */
@@ -2286,7 +2426,7 @@ style="width:120%;height:120%;object-fit:cover;object-position:center top;">
         <div class="portfolio-item-img">📊</div>
         <div class="portfolio-overlay">
           <button class="portfolio-view-btn"
-onclick="openModal('Interactive Business Form','pdf','Advanced Acrobat PDF with dropdown logic, auto-calculation fields, and email submission for a UK consultancy.','portfolio/portfolio-fillable-form-1.jpg')">
+onclick="openModal('Interactive Business Form','pdf','Advanced Acrobat PDF with dropdown logic, auto-calculation fields, and email submission for a UK consultancy.','portfolio/portfolio-fillable-form-1.jpg','fillableForm')">
 View Case Study
 </button>
         </div>
@@ -2303,21 +2443,52 @@ View Case Study
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal()">✕</button>
-        <img id="modalImage"
-     style="width:100%;
-            height:auto;
-            max-height:500px;
-            object-fit:contain;
-            border-radius:12px;
-            border:1px solid rgba(212,175,55,.3);
-            margin-bottom:24px;
-            background:#111;">
+
+    <!-- ══ GALLERY SLIDER ══ -->
+    <div class="modal-gallery" id="modalGallery">
+      <img id="modalImage" class="modal-gallery-img"
+           style="width:100%;height:auto;max-height:500px;object-fit:contain;
+                  border-radius:12px;border:1px solid rgba(212,175,55,.3);
+                  background:#111;display:block;">
+      <!-- Prev / Next controls (only visible in multi-image gallery mode) -->
+      <button class="gallery-nav gallery-prev" id="galleryPrev" onclick="galleryStep(-1)" aria-label="Previous image">‹</button>
+      <button class="gallery-nav gallery-next" id="galleryNext" onclick="galleryStep(1)" aria-label="Next image">›</button>
+      <!-- Image counter -->
+      <div class="gallery-counter" id="galleryCounter">1 / 8</div>
+    </div>
+
+    <!-- ══ THUMBNAIL STRIP (gallery mode only) ══ -->
+    <div class="gallery-thumbs" id="galleryThumbs"></div>
+
     <div class="modal-content">
       <div style="font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;" id="modalCat">PDF Editing</div>
       <h3 style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;margin-bottom:16px;" id="modalTitle">Project Title</h3>
       <div class="luxury-divider"><div class="divider-gem"></div></div>
       <p style="font-size:0.88rem;color:var(--white-60);line-height:1.85;margin-bottom:24px;" id="modalDesc">Project description here.</p>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px;">
+
+      <!-- ══ PROJECT INFO PANEL (gallery mode only) ══ -->
+      <div class="project-info" id="projectInfo">
+        <div class="project-info-grid">
+          <div class="project-info-row"><span class="pi-label">Project</span><span class="pi-value">Interactive Business Form</span></div>
+          <div class="project-info-row"><span class="pi-label">Category</span><span class="pi-value">Fillable PDF Forms</span></div>
+          <div class="project-info-row"><span class="pi-label">Price</span><span class="pi-value pi-gold">Starting at $50</span></div>
+          <div class="project-info-row"><span class="pi-label">Delivery</span><span class="pi-value">24 Hours</span></div>
+          <div class="project-info-row"><span class="pi-label">Software</span><span class="pi-value">Adobe Acrobat Pro</span></div>
+        </div>
+        <div class="project-features">
+          <div class="pf-title">Features</div>
+          <div class="pf-list">
+            <span class="pf-item">✓ Fillable Fields</span>
+            <span class="pf-item">✓ Dropdown Menus</span>
+            <span class="pf-item">✓ Auto Calculation</span>
+            <span class="pf-item">✓ Digital Signature</span>
+            <span class="pf-item">✓ PDF Automation</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ DEFAULT STATS (non-gallery projects only) ══ -->
+      <div class="modal-default-stats" id="modalDefaultStats" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px;">
         <div style="background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:4px;padding:16px;text-align:center;">
           <div style="color:var(--gold);font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;">24h</div>
           <div style="font-size:0.68rem;color:var(--white-60);text-transform:uppercase;letter-spacing:0.12em;">Delivery</div>
@@ -2331,6 +2502,7 @@ View Case Study
           <div style="font-size:0.68rem;color:var(--white-60);text-transform:uppercase;letter-spacing:0.12em;">Delivered</div>
         </div>
       </div>
+
       <a href="#contact" class="btn-primary" style="display:inline-block;" onclick="closeModal()">Start a Similar Project</a>
     </div>
   </div>
@@ -2919,13 +3091,89 @@ document.getElementById('portfolioSearch').addEventListener('input', function() 
 
 /* ══ MODAL ══ */
 const catEmojis = { pdf: '📋', design: '📱', logo: '💎', vector: '🖊️', editing: '📸', data: '📊' };
-function openModal(title, cat, desc, image) {
+
+/* Gallery image sets keyed by project id */
+const galleries = {
+  fillableForm: [
+    'portfolio/portfolio-fillable-form-2.jpg',
+    'portfolio/portfolio-fillable-form-3.jpg',
+    'portfolio/portfolio-fillable-form-4.jpg',
+    'portfolio/portfolio-fillable-form-5.jpg',
+    'portfolio/portfolio-fillable-form-6.jpg',
+    'portfolio/portfolio-fillable-form-7.jpg',
+    'portfolio/portfolio-fillable-form-8.jpg',
+    'portfolio/portfolio-fillable-form-9.jpg'
+  ]
+};
+
+let galleryImages = [];
+let galleryIndex = 0;
+
+function renderGalleryImage() {
+  const img = document.getElementById('modalImage');
+  img.src = galleryImages[galleryIndex];
+  document.getElementById('galleryCounter').textContent =
+    (galleryIndex + 1) + ' / ' + galleryImages.length;
+  document.querySelectorAll('.gallery-thumb').forEach((t, i) =>
+    t.classList.toggle('active', i === galleryIndex));
+}
+
+function galleryStep(dir) {
+  galleryIndex = (galleryIndex + dir + galleryImages.length) % galleryImages.length;
+  renderGalleryImage();
+}
+
+function buildThumbs() {
+  const wrap = document.getElementById('galleryThumbs');
+  wrap.innerHTML = '';
+  galleryImages.forEach((src, i) => {
+    const t = document.createElement('img');
+    t.src = src;
+    t.className = 'gallery-thumb' + (i === 0 ? ' active' : '');
+    t.loading = 'lazy';
+    t.onclick = () => { galleryIndex = i; renderGalleryImage(); };
+    wrap.appendChild(t);
+  });
+}
+
+function openModal(title, cat, desc, image, project) {
   document.getElementById('modalTitle').textContent = title;
   document.getElementById('modalCat').textContent = cat.toUpperCase();
   document.getElementById('modalDesc').textContent = desc;
 
-  document.getElementById('modalImage').src = image;
-  document.getElementById('modalImage').style.display = 'block';
+  const isGallery = project && galleries[project];
+  const galleryEl  = document.getElementById('modalGallery');
+  const thumbsEl   = document.getElementById('galleryThumbs');
+  const infoEl     = document.getElementById('projectInfo');
+  const defStats   = document.getElementById('modalDefaultStats');
+  const prevBtn    = document.getElementById('galleryPrev');
+  const nextBtn    = document.getElementById('galleryNext');
+  const counter    = document.getElementById('galleryCounter');
+
+  if (isGallery) {
+    /* ── Gallery mode (Interactive Business Form) ── */
+    galleryImages = galleries[project];
+    galleryIndex = 0;
+    buildThumbs();
+    renderGalleryImage();
+    prevBtn.style.display = 'flex';
+    nextBtn.style.display = 'flex';
+    counter.style.display = 'block';
+    thumbsEl.style.display = 'flex';
+    infoEl.style.display = 'block';
+    defStats.style.display = 'none';
+  } else {
+    /* ── Default single-image mode (all other projects, unchanged) ── */
+    galleryImages = [];
+    document.getElementById('modalImage').src = image;
+    document.getElementById('modalImage').style.display = 'block';
+    prevBtn.style.display = 'none';
+    nextBtn.style.display = 'none';
+    counter.style.display = 'none';
+    thumbsEl.style.display = 'none';
+    infoEl.style.display = 'none';
+    defStats.style.display = 'grid';
+  }
 
   document.getElementById('modalOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -2937,7 +3185,14 @@ function closeModal() {
 document.getElementById('modalOverlay').addEventListener('click', e => {
   if (e.target === e.currentTarget) closeModal();
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+  /* Arrow-key navigation when gallery is active */
+  if (galleryImages.length && document.getElementById('modalOverlay').classList.contains('open')) {
+    if (e.key === 'ArrowLeft')  galleryStep(-1);
+    if (e.key === 'ArrowRight') galleryStep(1);
+  }
+});
 
 /* ══ TESTIMONIALS CAROUSEL ══ */
 let tIdx = 0;
