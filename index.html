@@ -2382,7 +2382,7 @@ style="width:120%;height:120%;object-fit:cover;object-position:center top;">
       <div class="portfolio-item" data-category="logo Design" data-title="Luxury Brand Identity">
         <div class="portfolio-item-img">💎</div>
         <div class="portfolio-overlay">
-          <button class="portfolio-view-btn" onclick="openModal('Luxury Brand Identity','logo','Complete logo suite for a premium skincare brand — wordmark, icon mark, and brand guidelines delivered in all vector formats.')">View Case Study</button>
+          <button class="portfolio-view-btn" onclick="openModal('Luxury Brand Identity','logo','A premium custom logo created for modern businesses seeking a memorable and timeless brand identity. The project focused on clean typography, balanced composition, professional color selection, and scalable vector artwork suitable for print, digital, packaging, signage, and social media branding.','portfolio/portfolio-logo-1.jpg','logoDesign')">View Case Study</button>
         </div>
         <div class="portfolio-item-meta">
           <div class="portfolio-item-cat">Logo Design</div>
@@ -3107,17 +3107,81 @@ const catEmojis = { pdf: '📋', design: '📱', logo: '💎', vector: '🖊️'
 
 /* Gallery image sets keyed by project id */
 const galleries = {
-  fillableForm: [
-    'portfolio/portfolio-fillable-form-2.jpg',
-    'portfolio/portfolio-fillable-form-3.jpg',
-    'portfolio/portfolio-fillable-form-4.jpg',
-    'portfolio/portfolio-fillable-form-5.jpg',
-    'portfolio/portfolio-fillable-form-6.jpg',
-    'portfolio/portfolio-fillable-form-7.jpg',
-    'portfolio/portfolio-fillable-form-8.jpg',
-    'portfolio/portfolio-fillable-form-9.jpg'
-  ]
+  fillableForm: {
+    images: [
+      'portfolio/portfolio-fillable-form-2.jpg',
+      'portfolio/portfolio-fillable-form-3.jpg',
+      'portfolio/portfolio-fillable-form-4.jpg',
+      'portfolio/portfolio-fillable-form-5.jpg',
+      'portfolio/portfolio-fillable-form-6.jpg',
+      'portfolio/portfolio-fillable-form-7.jpg',
+      'portfolio/portfolio-fillable-form-8.jpg',
+      'portfolio/portfolio-fillable-form-9.jpg'
+    ],
+    info: {
+      rows: [
+        ['Project', 'Interactive Business Form', false],
+        ['Category', 'Fillable PDF Forms', false],
+        ['Price', 'Starting at $50', true],
+        ['Delivery', '24 Hours', false],
+        ['Software', 'Adobe Acrobat Pro', false]
+      ],
+      features: [
+        '✓ Fillable Fields', '✓ Dropdown Menus', '✓ Auto Calculation',
+        '✓ Digital Signature', '✓ PDF Automation'
+      ]
+    }
+  },
+  logoDesign: {
+    images: [
+      'portfolio/portfolio-logo-1.jpg',
+      'portfolio/portfolio-logo-2.png',
+      'portfolio/portfolio-logo-3.jpg',
+      'portfolio/portfolio-logo-4.png',
+      'portfolio/portfolio-logo-5.jpg',
+      'portfolio/portfolio-logo-6.png',
+      'portfolio/portfolio-logo-7.jpg',
+      'portfolio/portfolio-logo-8.png',
+      'portfolio/portfolio-logo-9.jpg',
+      'portfolio/portfolio-logo-10.png',
+      'portfolio/portfolio-logo-11.jpg',
+      'portfolio/portfolio-logo-12.png',
+      'portfolio/portfolio-logo-13.jpg',
+      'portfolio/portfolio-logo-14.png',
+      'portfolio/portfolio-logo-15.jpg',
+      'portfolio/portfolio-logo-16.jpg',
+      'portfolio/portfolio-logo-17.jpg',
+      'portfolio/portfolio-logo-18.jpg'
+    ],
+    info: {
+      rows: [
+        ['Project', 'Luxury Brand Identity', false],
+        ['Category', 'Logo Design', false],
+        ['Industry', 'Corporate Branding', false],
+        ['Price', 'Starting at $30', true],
+        ['Delivery', '24 Hours', false],
+        ['Software', 'Adobe Illustrator', false]
+      ],
+      features: [
+        '✔ Custom Logo Design', '✔ Minimalist Design', '✔ Luxury Branding',
+        '✔ AI Source File', '✔ EPS', '✔ SVG', '✔ PDF', '✔ PNG',
+        '✔ Transparent Background', '✔ Print Ready', '✔ Social Media Ready',
+        '✔ Unlimited Revisions'
+      ],
+      stats: [
+        ['Adobe Illustrator', 'Software'],
+        ['24 Hours', 'Delivery'],
+        ['Starting at $30', 'Price']
+      ]
+    }
+  }
 };
+
+/* Normalize: return the image array for a project whether it's a plain array or an {images} object */
+function galleryImagesOf(project) {
+  const g = galleries[project];
+  return Array.isArray(g) ? g : g.images;
+}
 
 let galleryImages = [];
 let galleryIndex = 0;
@@ -3164,9 +3228,30 @@ function openModal(title, cat, desc, image, project) {
   const counter    = document.getElementById('galleryCounter');
 
   if (isGallery) {
-    /* ── Gallery mode (Interactive Business Form) ── */
-    galleryImages = galleries[project];
+    /* ── Gallery mode ── */
+    galleryImages = galleryImagesOf(project);
     galleryIndex = 0;
+
+    /* If this gallery ships its own info block, render it dynamically.
+       (Fillable PDF has no info object, so its existing HTML stays as-is.) */
+    const g = galleries[project];
+    if (g.info) {
+      const infoGrid = infoEl.querySelector('.project-info-grid');
+      const pfList = infoEl.querySelector('.pf-list');
+      if (infoGrid) {
+        infoGrid.innerHTML = g.info.rows.map(([label, value, gold]) =>
+          '<div class="project-info-row"><span class="pi-label">' + label +
+          '</span><span class="pi-value' + (gold ? ' pi-gold' : '') + '">' + value +
+          '</span></div>'
+        ).join('');
+      }
+      if (pfList) {
+        pfList.innerHTML = g.info.features.map(f =>
+          '<span class="pf-item">' + f + '</span>'
+        ).join('');
+      }
+    }
+
     buildThumbs();
     renderGalleryImage();
     prevBtn.style.display = 'flex';
@@ -3206,6 +3291,29 @@ document.addEventListener('keydown', e => {
     if (e.key === 'ArrowRight') galleryStep(1);
   }
 });
+
+/* ── Swipe navigation (mobile) — reuses galleryStep ── */
+(function () {
+  const gEl = document.getElementById('modalGallery');
+  if (!gEl) return;
+  let startX = 0, startY = 0, tracking = false;
+  gEl.addEventListener('touchstart', e => {
+    if (!galleryImages.length) return;
+    startX = e.changedTouches[0].clientX;
+    startY = e.changedTouches[0].clientY;
+    tracking = true;
+  }, { passive: true });
+  gEl.addEventListener('touchend', e => {
+    if (!tracking || !galleryImages.length) return;
+    tracking = false;
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    /* horizontal swipe only, min 40px, ignore mostly-vertical scrolls */
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+      galleryStep(dx < 0 ? 1 : -1);
+    }
+  }, { passive: true });
+})();
 
 /* ══ TESTIMONIALS CAROUSEL ══ */
 let tIdx = 0;
