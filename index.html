@@ -2679,6 +2679,9 @@ footer {
   .pdfcs-zoom-meta { top: 20px; left: 16px; }
 }
 
+/* Only the active project's header + details panel are shown */
+.pdfcs-head[hidden], .pdfcs-panel[hidden] { display: none; }
+
 @media (prefers-reduced-motion: reduce) {
   .pdfcs-overlay, .pdfcs-shell, .pdfcs-slide, .pdfcs-zoom { transition-duration: 0.01ms; }
   .pdfcs-progress span { transition: none; }
@@ -3083,7 +3086,7 @@ style="width:120%;height:120%;object-fit:cover;object-position:center top;">
       <div class="portfolio-item" data-category="editing" data-title="Product Photo Retouching" data-service="background-removal">
         <div class="portfolio-item-img" data-icon="background-removal"></div>
         <div class="portfolio-overlay">
-          <button class="portfolio-view-btn" onclick="openModal('Product Photo Retouching','editing','Batch background removal and color correction for an e-commerce store with 50+ product images.')">View Case Study</button>
+          <button class="portfolio-view-btn" onclick="openSbtexCaseStudy('imageEditing')">View Case Study</button>
         </div>
         <div class="portfolio-item-meta">
           <div class="portfolio-item-cat">Image Editing</div>
@@ -3280,10 +3283,12 @@ View Case Study
 <!-- ══════════════════════════════════════════════════════════════════
      PDF EDITING CASE STUDY  ▸  "Legal Contract Redesign"
      ------------------------------------------------------------------
-     Self-contained. Opened only by openPdfEditingCaseStudy().
-     The gallery + thumbnails are generated from the pdfEditingGallery
-     array in the script block — do not add slide markup by hand.
-     The copy below is placeholder text; replace it in place.
+     SHARED case-study modal. One modal serves every gallery project;
+     openSbtexCaseStudy('pdfEditing' | 'imageEditing') opens it.
+     Slides + thumbnails are generated from the CASE_STUDIES config in
+     the script block — never add slide markup by hand.
+     Each project has its own [data-cs] header and details panel below;
+     only the active one is shown. The copy is placeholder — edit in place.
      ══════════════════════════════════════════════════════════════════ -->
 <div class="pdfcs-overlay" id="pdfcsOverlay" role="dialog" aria-modal="true"
      aria-labelledby="pdfcsTitle" aria-hidden="true">
@@ -3293,12 +3298,21 @@ View Case Study
   <div class="pdfcs-shell" id="pdfcsShell">
     <div class="pdfcs-inner">
 
-      <header class="pdfcs-head">
+      <header class="pdfcs-head" data-cs="pdfEditing">
         <div class="pdfcs-eyebrow">PDF Editing &nbsp;&middot;&nbsp; Case Study</div>
         <h2 class="pdfcs-title" id="pdfcsTitle">Legal Contract Redesign</h2>
         <p class="pdfcs-lede">
           Complete restructuring of a multi-page legal contract PDF with fillable form fields,
           digital signature blocks, and professional formatting for a US law firm.
+        </p>
+      </header>
+
+      <header class="pdfcs-head" data-cs="imageEditing" hidden>
+        <div class="pdfcs-eyebrow">Image Editing &nbsp;&middot;&nbsp; Case Study</div>
+        <h2 class="pdfcs-title" id="pdfcsTitleImage">Product Photo Retouching</h2>
+        <p class="pdfcs-lede">
+          Batch background removal and colour correction for an e-commerce store
+          with 50+ product images.
         </p>
       </header>
 
@@ -3318,7 +3332,7 @@ View Case Study
         </div>
 
         <!-- ── PROJECT DETAILS (placeholder copy — replace in place) ── -->
-        <aside class="pdfcs-panel">
+        <aside class="pdfcs-panel" data-cs="pdfEditing">
           <div class="pdfcs-panel-title">Project Details</div>
 
           <div class="pdfcs-rows">
@@ -3382,6 +3396,72 @@ View Case Study
           </div>
 
           <a href="#contact" class="btn-primary pdfcs-cta" id="pdfcsCta">Start a Similar Project</a>
+        </aside>
+
+        <aside class="pdfcs-panel" data-cs="imageEditing" hidden>
+          <div class="pdfcs-panel-title">Project Details</div>
+
+          <div class="pdfcs-rows">
+            <div class="pdfcs-row"><span class="pdfcs-k">Project Title</span><span class="pdfcs-v">Product Photo Retouching</span></div>
+            <div class="pdfcs-row"><span class="pdfcs-k">Category</span><span class="pdfcs-v">Image Editing</span></div>
+            <div class="pdfcs-row"><span class="pdfcs-k">Software Used</span><span class="pdfcs-v">Adobe Photoshop, Lightroom Classic</span></div>
+            <div class="pdfcs-row"><span class="pdfcs-k">Industry</span><span class="pdfcs-v">E-commerce &amp; Retail</span></div>
+            <div class="pdfcs-row"><span class="pdfcs-k">Service Type</span><span class="pdfcs-v">Retouching &amp; Background Removal</span></div>
+          </div>
+
+          <div class="pdfcs-block">
+            <div class="pdfcs-h">Project Overview</div>
+            <p class="pdfcs-p">
+              A retail catalogue shot across several sessions arrived with mismatched
+              lighting, cluttered backgrounds and inconsistent framing. Every frame was
+              cut out, colour-matched to the physical product, and re-exported at a single
+              size and crop ratio so the storefront reads as one coherent set.
+            </p>
+          </div>
+
+          <div class="pdfcs-block">
+            <div class="pdfcs-h">Challenges</div>
+            <ul class="pdfcs-ul">
+              <li>White balance drifted between shooting sessions.</li>
+              <li>Reflective and semi-transparent surfaces resisted clean cut-outs.</li>
+              <li>Fine edges — hair, mesh, fabric weave — needed masking, not selection.</li>
+              <li>Marketplace listings enforce a fixed frame and margin.</li>
+            </ul>
+          </div>
+
+          <div class="pdfcs-block">
+            <div class="pdfcs-h">Solution</div>
+            <ul class="pdfcs-ul">
+              <li>A calibrated Lightroom profile applied across the full batch.</li>
+              <li>Hand-refined masks with edge decontamination on difficult surfaces.</li>
+              <li>Frequency separation for blemish and dust removal on close-ups.</li>
+              <li>A batch export action locking size, margin and colour profile.</li>
+            </ul>
+          </div>
+
+          <div class="pdfcs-block">
+            <div class="pdfcs-h">Client Benefits</div>
+            <ul class="pdfcs-ul">
+              <li>Listings pass marketplace image review on first submission.</li>
+              <li>Returns from colour mismatch dropped noticeably.</li>
+              <li>A reusable preset the in-house team applies to new products.</li>
+              <li>One consistent look across storefront, ads and print.</li>
+            </ul>
+          </div>
+
+          <div class="pdfcs-block">
+            <div class="pdfcs-h">Deliverables</div>
+            <div class="pdfcs-tags">
+              <span class="pdfcs-tag">Transparent PNG cut-outs</span>
+              <span class="pdfcs-tag">White-background JPEGs</span>
+              <span class="pdfcs-tag">Lifestyle composites</span>
+              <span class="pdfcs-tag">Web-optimised exports</span>
+              <span class="pdfcs-tag">Layered PSD source</span>
+              <span class="pdfcs-tag">Lightroom preset</span>
+            </div>
+          </div>
+
+          <a href="#contact" class="btn-primary pdfcs-cta">Start a Similar Project</a>
         </aside>
 
       </div>
@@ -4745,39 +4825,70 @@ window.addEventListener('scroll', () => {
   });
 });
 
-/* ══════════════════════════════════════════════════════════════════════
-   PDF EDITING CASE STUDY  ▸  "Legal Contract Redesign"
-   ----------------------------------------------------------------------
-   Self-contained module. Nothing outside this IIFE is read or written
-   except the single global it exposes: openPdfEditingCaseStudy().
-   All other portfolio items, galleries and modals are untouched.
+/* ══════════════════════════════════════════════
+   SBTEXMEDIA SHARED CASE STUDY MODAL
+   ------------------------------------------------------------------
+   Drives one modal for every gallery-backed portfolio project:
+     openSbtexCaseStudy('pdfEditing')     → Legal Contract Redesign
+     openSbtexCaseStudy('imageEditing')   → Product Photo Retouching
 
-   ┌────────────────────────────────────────────────────────────────┐
-   │  TO ADD MORE IMAGES: add filenames to pdfEditingGallery below.  │
-   │  Nothing else changes — slides, thumbnails, the counter, the    │
-   │  autoplay loop and the zoom viewer all rebuild themselves.      │
-   │                                                                 │
-   │  Filenames already listed but not yet uploaded render as an     │
-   │  elegant placeholder slide. The moment the file exists on the   │
-   │  server it displays automatically, with no code change at all.  │
-   └────────────────────────────────────────────────────────────────┘
-   ══════════════════════════════════════════════════════════════════════ */
-(function pdfEditingCaseStudy() {
+   Nothing outside this IIFE is read or written except the two globals
+   it exposes. All other portfolio items and modals are untouched.
 
-  var PDF_EDITING_BASE = 'images/portfolio/pdf-editing/';
+   TO ADD MORE IMAGES
+     Add filenames to that project's images[] array in CASE_STUDIES
+     below. Slides, thumbnails, the counter, the autoplay loop and the
+     zoom viewer all rebuild themselves — no HTML editing.
 
-  var pdfEditingGallery = [
-    'PDF-Editing-1.jpg',
-    'PDF-Editing-2.jpg',
-    'PDF-Editing-3.jpg',
-    'PDF-Editing-4.jpg',
-    'PDF-Editing-5.jpg',
-    'PDF-Editing-6.jpg',
-    'PDF-Editing-7.jpg',
-    'PDF-Editing-8.jpg',
-    'PDF-Editing-9.jpg',
-    'PDF-Editing-10.jpg'
-  ];
+     Filenames listed but not yet uploaded render as a placeholder
+     slide. The moment the file exists on the server it displays
+     automatically, with no code change at all.
+
+   TO ADD A NEW PROJECT
+     Add a CASE_STUDIES entry, then add a matching [data-cs] header
+     and details panel to the modal markup.
+   ══════════════════════════════════════════════ */
+(function sbtexCaseStudyModal() {
+
+  var CASE_STUDIES = {
+
+    pdfEditing: {
+      titleId: 'pdfcsTitle',
+      base: 'images/portfolio/pdf-editing/',
+      alt: 'Legal Contract Redesign — PDF editing sample ',
+      images: [
+        'PDF-Editing-1.jpg',
+        'PDF-Editing-2.jpg',
+        'PDF-Editing-3.jpg',
+        'PDF-Editing-4.jpg',
+        'PDF-Editing-5.jpg',
+        'PDF-Editing-6.jpg',
+        'PDF-Editing-7.jpg',
+        'PDF-Editing-8.jpg',
+        'PDF-Editing-9.jpg',
+        'PDF-Editing-10.jpg'
+      ]
+    },
+
+    imageEditing: {
+      titleId: 'pdfcsTitleImage',
+      base: 'images/portfolio/image-editing/',
+      alt: 'Product Photo Retouching — image editing sample ',
+      images: [
+        'Image-Editing-01.jpg',
+        'Image-Editing-02.jpg',
+        'Image-Editing-03.jpg',
+        'Image-Editing-04.jpg',
+        'Image-Editing-05.jpg',
+        'Image-Editing-06.jpg',
+        'Image-Editing-07.jpg',
+        'Image-Editing-08.jpg',
+        'Image-Editing-09.jpg',
+        'Image-Editing-10.jpg'
+      ]
+    }
+
+  };
 
   var AUTOPLAY_MS = 2000;   /* autoplay interval */
   var TICK_MS     = 50;     /* progress-bar refresh */
@@ -4797,7 +4908,7 @@ window.addEventListener('scroll', () => {
   var closeBtn  = document.getElementById('pdfcsClose');
   var prevBtn   = document.getElementById('pdfcsPrev');
   var nextBtn   = document.getElementById('pdfcsNext');
-  var ctaBtn    = document.getElementById('pdfcsCta');
+  var ctaBtns   = document.querySelectorAll('.pdfcs-cta');
 
   var zCanvas   = document.getElementById('pdfcsZoomCanvas');
   var zImg      = document.getElementById('pdfcsZoomImg');
@@ -4811,11 +4922,12 @@ window.addEventListener('scroll', () => {
   var ring      = document.getElementById('cursorRing');
 
   /* ── State ─────────────────────────────────────────────────────── */
-  var built = false;
+  var builtKey = null;      /* which project's slides are currently in the DOM */
+  var cfg = null;           /* active CASE_STUDIES entry */
   var slides = [];
   var thumbs = [];
   var index = 0;
-  var total = pdfEditingGallery.length;
+  var total = 0;
   var lastFocus = null;
   var prevOverflow = '';
 
@@ -4828,14 +4940,22 @@ window.addEventListener('scroll', () => {
     el.addEventListener('mouseleave', function () { ring.classList.remove('hovered'); });
   }
 
-  function srcOf(i) { return PDF_EDITING_BASE + pdfEditingGallery[i]; }
+  function srcOf(i) { return cfg.base + cfg.images[i]; }
 
-  /* ── Build slides + thumbnails from the array (once, on first open) ─ */
-  function build() {
-    if (built) return;
-    built = true;
+  /* ── Build slides + thumbnails from the config (only when the project
+        changes, so re-opening the same case study costs nothing) ──── */
+  function build(key) {
+    if (builtKey === key) return;
+    builtKey = key;
+    cfg = CASE_STUDIES[key];
+    total = cfg.images.length;
 
-    pdfEditingGallery.forEach(function (file, i) {
+    slides.forEach(function (s) { s.parentNode.removeChild(s); });
+    slides = [];
+    thumbs = [];
+    thumbsEl.innerHTML = '';
+
+    cfg.images.forEach(function (file, i) {
       /* Slide */
       var slide = document.createElement('div');
       slide.className = 'pdfcs-slide';
@@ -4844,7 +4964,7 @@ window.addEventListener('scroll', () => {
 
       var img = document.createElement('img');
       img.src = srcOf(i);
-      img.alt = 'Legal Contract Redesign — PDF editing sample ' + (i + 1);
+      img.alt = cfg.alt + (i + 1);
       img.setAttribute('loading', i === 0 ? 'eager' : 'lazy');
       img.setAttribute('decoding', 'async');
       img.draggable = false;
@@ -5021,7 +5141,7 @@ window.addEventListener('scroll', () => {
     var missing = slide && slide.getAttribute('data-missing') === '1';
     zImg.style.visibility = missing ? 'hidden' : 'visible';
     zImg.src = srcOf(index);
-    zImg.alt = 'Legal Contract Redesign — PDF editing sample ' + (index + 1);
+    zImg.alt = cfg.alt + (index + 1);
     zMeta.textContent = (index + 1) + ' / ' + total;
     resetZoom();
   }
@@ -5125,9 +5245,18 @@ window.addEventListener('scroll', () => {
   })();
 
   /* ══ OPEN / CLOSE THE CASE STUDY ════════════════════════════════ */
-  function openCaseStudy() {
+  function openCaseStudy(key) {
+    var c = CASE_STUDIES[key];
+    if (!c) return;
     lastFocus = document.activeElement;
-    build();
+    build(key);
+
+    /* Show only this project's header + details panel */
+    Array.prototype.forEach.call(overlay.querySelectorAll('[data-cs]'), function (el) {
+      el.hidden = el.getAttribute('data-cs') !== key;
+    });
+    overlay.setAttribute('aria-labelledby', c.titleId);
+
     goTo(0);
     overlay.classList.add('open');
     overlay.setAttribute('aria-hidden', 'false');
@@ -5152,7 +5281,9 @@ window.addEventListener('scroll', () => {
   overlay.addEventListener('click', function (e) {
     if (e.target === overlay || e.target === shell) closeCaseStudy();
   });
-  if (ctaBtn) ctaBtn.addEventListener('click', closeCaseStudy);
+  Array.prototype.forEach.call(ctaBtns, function (b) {
+    b.addEventListener('click', closeCaseStudy);
+  });
 
   /* ── Keyboard: arrows navigate, ESC closes zoom first, then modal ── */
   document.addEventListener('keydown', function (e) {
@@ -5171,8 +5302,9 @@ window.addEventListener('scroll', () => {
     if (e.key === 'End')        { e.preventDefault(); goTo(total - 1); restart(); }
   }, true);
 
-  /* Single global entry point, called by the portfolio card's button */
-  window.openPdfEditingCaseStudy = openCaseStudy;
+  /* Global entry points, called by the portfolio cards' buttons */
+  window.openSbtexCaseStudy = openCaseStudy;
+  window.openPdfEditingCaseStudy = function () { openCaseStudy('pdfEditing'); };
 })();
 
 </script>
