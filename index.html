@@ -2289,6 +2289,400 @@ footer {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+/* ══════════════════════════════════════════════════════════════════════
+   PDF EDITING CASE STUDY  ▸  "Legal Contract Redesign"
+   ----------------------------------------------------------------------
+   Everything below is scoped to the .pdfcs-* namespace and is used by
+   NOTHING else on the page. It inherits the site's existing tokens
+   (--gold, --black-3, --font-display, --ease-out-expo …) so it stays
+   visually identical to the rest of the site in both dark and light mode.
+   No existing selector is overridden.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ── Overlay + shell ─────────────────────────────────────────────── */
+.pdfcs-overlay {
+  position: fixed; inset: 0;
+  z-index: 3000;
+  background: rgba(0,0,0,0.94);
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  visibility: hidden;          /* keeps the buttons out of the tab order */
+  pointer-events: none;
+  transition: opacity var(--transition-med), visibility 0s linear 0.4s;
+}
+.pdfcs-overlay.open {
+  opacity: 1; visibility: visible; pointer-events: auto;
+  transition: opacity var(--transition-med), visibility 0s;
+}
+
+.pdfcs-shell {
+  position: relative;
+  width: 100%; height: 100%;
+  overflow-y: auto; overflow-x: hidden;
+  padding: clamp(14px, 2vw, 30px);
+  opacity: 0;
+  transform: scale(0.965) translateY(24px);
+  transition: transform 0.55s var(--ease-out-expo), opacity 0.45s var(--ease-luxury);
+}
+.pdfcs-overlay.open .pdfcs-shell { opacity: 1; transform: none; }
+
+.pdfcs-inner {
+  max-width: 1440px;
+  min-height: 100%;
+  margin: 0 auto;
+  background: var(--black-3);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  padding: clamp(26px, 3vw, 46px);
+}
+
+.pdfcs-close {
+  position: fixed;
+  top: 18px; right: 18px;
+  z-index: 6;
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: rgba(10,10,10,0.78);
+  backdrop-filter: blur(8px);
+  color: var(--gold-dim);
+  font-size: 1.25rem; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  cursor: none;
+  transition: all var(--transition-fast);
+}
+.pdfcs-close:hover { border-color: var(--gold); color: var(--gold); background: var(--gold-glow); }
+.pdfcs-close:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+/* ── Header ──────────────────────────────────────────────────────── */
+.pdfcs-head { max-width: 900px; margin-bottom: 32px; padding-right: 56px; }
+.pdfcs-eyebrow {
+  font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 10px;
+}
+.pdfcs-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.55rem, 3vw, 2.15rem);
+  font-weight: 700; line-height: 1.2;
+}
+.pdfcs-lede {
+  font-size: 0.88rem; color: var(--white-60);
+  line-height: 1.85; margin-top: 14px;
+}
+
+/* ── Two-column layout ───────────────────────────────────────────── */
+.pdfcs-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.62fr) minmax(300px, 1fr);
+  gap: clamp(22px, 3vw, 44px);
+  align-items: start;
+}
+
+/* ── Slider stage ────────────────────────────────────────────────── */
+.pdfcs-stage {
+  position: relative;
+  width: 100%;
+  height: clamp(300px, 58vh, 660px);
+  background: linear-gradient(160deg, #151515, #0d0d0d);
+  border: 1px solid rgba(212,175,55,0.28);
+  border-radius: 12px;
+  overflow: hidden;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.pdfcs-slide {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  padding: 14px;
+  opacity: 0;
+  transform: translateX(46px) scale(0.985);
+  transition: opacity 0.6s var(--ease-luxury), transform 0.6s var(--ease-out-expo);
+  pointer-events: none;
+}
+.pdfcs-slide.is-before { transform: translateX(-46px) scale(0.985); }
+.pdfcs-slide.is-active { opacity: 1; transform: none; pointer-events: auto; z-index: 2; }
+.pdfcs-stage.is-dragging .pdfcs-slide { transition: none; }
+
+/* Aspect ratio is always preserved — never stretched, never cropped. */
+.pdfcs-slide img {
+  max-width: 100%; max-height: 100%;
+  width: auto; height: auto;
+  object-fit: contain;
+  border-radius: 6px;
+  cursor: none;
+  display: block;
+}
+.pdfcs-slide img[data-broken="1"] { display: none; }
+
+/* Placeholder shown until the real image file is uploaded */
+.pdfcs-ph {
+  width: min(76%, 400px);
+  aspect-ratio: 4 / 3;
+  border: 1px dashed rgba(212,175,55,0.45);
+  border-radius: 10px;
+  background: var(--white-5);
+  display: none;
+  flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; padding: 22px; text-align: center;
+}
+.pdfcs-slide[data-missing="1"] .pdfcs-ph { display: flex; }
+.pdfcs-ph-num { font-family: var(--font-display); font-size: 2.1rem; color: var(--gold); line-height: 1; }
+.pdfcs-ph-txt { font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold-dim); }
+
+/* ── Stage controls ──────────────────────────────────────────────── */
+.pdfcs-nav {
+  position: absolute; top: 50%;
+  transform: translateY(-50%);
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: rgba(10,10,10,0.7);
+  backdrop-filter: blur(8px);
+  color: var(--gold);
+  font-size: 1.6rem; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  cursor: none; z-index: 4;
+  transition: all var(--transition-fast);
+}
+.pdfcs-nav:hover { background: var(--gold); color: var(--black); border-color: var(--gold); }
+.pdfcs-nav:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.pdfcs-prev { left: 14px; }
+.pdfcs-next { right: 14px; }
+
+.pdfcs-counter {
+  position: absolute; bottom: 14px; right: 14px;
+  background: rgba(10,10,10,0.75);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border);
+  color: var(--gold);
+  font-size: 0.7rem; letter-spacing: 0.1em;
+  padding: 4px 12px; border-radius: 20px;
+  z-index: 4;
+}
+.pdfcs-hint {
+  position: absolute; bottom: 14px; left: 14px;
+  background: rgba(10,10,10,0.75);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border);
+  color: var(--gold-dim);
+  font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 4px 12px; border-radius: 20px;
+  z-index: 4;
+  opacity: 0; transition: opacity var(--transition-fast);
+}
+.pdfcs-stage:hover .pdfcs-hint { opacity: 1; }
+
+/* Autoplay progress bar */
+.pdfcs-progress {
+  position: absolute; left: 0; bottom: 0;
+  height: 2px; width: 100%;
+  background: rgba(255,255,255,0.06);
+  z-index: 4;
+}
+.pdfcs-progress span {
+  display: block; height: 100%; width: 0;
+  background: var(--gold);
+  transition: width 0.12s linear;
+}
+
+/* ── Thumbnails ──────────────────────────────────────────────────── */
+.pdfcs-thumbs {
+  display: flex; gap: 8px;
+  overflow-x: auto;
+  padding: 12px 2px 6px;
+  scrollbar-width: thin;
+}
+.pdfcs-thumbs::-webkit-scrollbar { height: 4px; }
+.pdfcs-thumbs::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+.pdfcs-thumb {
+  position: relative;
+  flex: 0 0 auto;
+  width: 78px; height: 58px;
+  border-radius: 6px;
+  border: 1px solid var(--glass-border);
+  background: var(--black-2);
+  overflow: hidden;
+  opacity: 0.5;
+  cursor: none;
+  padding: 0;
+  transition: opacity var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.pdfcs-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.pdfcs-thumb img[data-broken="1"] { display: none; }
+.pdfcs-thumb-ph {
+  position: absolute; inset: 0;
+  display: none; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 0.95rem; color: var(--gold-dim);
+}
+.pdfcs-thumb[data-missing="1"] .pdfcs-thumb-ph { display: flex; }
+.pdfcs-thumb:hover { opacity: 0.85; }
+.pdfcs-thumb.active { opacity: 1; border-color: var(--gold); box-shadow: var(--shadow-gold); }
+.pdfcs-thumb:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+/* ── Project details panel ───────────────────────────────────────── */
+.pdfcs-panel {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  padding: 26px clamp(18px, 2vw, 26px);
+}
+.pdfcs-panel-title {
+  font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 16px;
+}
+.pdfcs-rows { margin-bottom: 26px; }
+.pdfcs-row {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  gap: 16px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--white-10);
+}
+.pdfcs-row:last-child { border-bottom: none; }
+.pdfcs-k {
+  font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--white-60); white-space: nowrap;
+}
+.pdfcs-v { font-size: 0.84rem; font-weight: 500; color: var(--white); text-align: right; }
+.pdfcs-v.gold { color: var(--gold); font-weight: 600; }
+
+.pdfcs-block { margin-bottom: 24px; }
+.pdfcs-block:last-child { margin-bottom: 0; }
+.pdfcs-h {
+  font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 10px;
+}
+.pdfcs-p { font-size: 0.84rem; color: var(--white-60); line-height: 1.85; }
+.pdfcs-ul { display: flex; flex-direction: column; gap: 9px; }
+.pdfcs-ul li {
+  position: relative;
+  padding-left: 20px;
+  font-size: 0.83rem; color: var(--white-80); line-height: 1.7;
+}
+.pdfcs-ul li::before {
+  content: '';
+  position: absolute; left: 0; top: 0.62em;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+.pdfcs-tags { display: flex; flex-wrap: wrap; gap: 9px; }
+.pdfcs-tag {
+  font-size: 0.78rem; color: var(--white-80);
+  background: var(--gold-glow);
+  border: 1px solid rgba(212,175,55,0.25);
+  border-radius: 20px;
+  padding: 7px 15px;
+}
+.pdfcs-cta { margin-top: 30px; display: inline-block; }
+
+/* ── Fullscreen zoom viewer ──────────────────────────────────────── */
+.pdfcs-zoom {
+  position: fixed; inset: 0;
+  z-index: 3100;
+  background: rgba(0,0,0,0.97);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity var(--transition-med), visibility 0s linear 0.4s;
+  overflow: hidden;
+  touch-action: none;
+}
+.pdfcs-zoom.open {
+  opacity: 1; visibility: visible; pointer-events: auto;
+  transition: opacity var(--transition-med), visibility 0s;
+}
+.pdfcs-zoom-canvas {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.pdfcs-zoom-canvas img {
+  max-width: 100%; max-height: 100%;
+  width: auto; height: auto;
+  object-fit: contain;
+  transform-origin: center center;
+  will-change: transform;
+  cursor: none;
+}
+.pdfcs-zoom-bar {
+  position: absolute; bottom: 22px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(10,10,10,0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border);
+  border-radius: 40px;
+  padding: 8px 12px;
+  z-index: 3;
+}
+.pdfcs-zbtn {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: transparent;
+  color: var(--gold);
+  font-size: 1.05rem; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  cursor: none;
+  transition: all var(--transition-fast);
+}
+.pdfcs-zbtn:hover { background: var(--gold); color: var(--black); border-color: var(--gold); }
+.pdfcs-zbtn:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.pdfcs-zlevel {
+  min-width: 56px; text-align: center;
+  font-size: 0.72rem; letter-spacing: 0.08em; color: var(--gold-dim);
+}
+.pdfcs-zoom-close {
+  position: absolute; top: 18px; right: 18px;
+  z-index: 3;
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: rgba(10,10,10,0.78);
+  color: var(--gold-dim);
+  font-size: 1.25rem; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  cursor: none;
+  transition: all var(--transition-fast);
+}
+.pdfcs-zoom-close:hover { border-color: var(--gold); color: var(--gold); }
+.pdfcs-zoom-meta {
+  position: absolute; top: 24px; left: 24px;
+  font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--gold-dim);
+  z-index: 3;
+}
+
+/* ══ RESPONSIVE ══
+   Desktop  : large gallery + details beside it
+   Tablet   : gallery on top, details below
+   Mobile   : everything stacked vertically                            */
+@media (max-width: 1024px) {
+  .pdfcs-grid { grid-template-columns: 1fr; }
+  .pdfcs-stage { height: clamp(280px, 48vh, 520px); }
+}
+@media (max-width: 600px) {
+  .pdfcs-shell { padding: 10px; }
+  .pdfcs-inner { padding: 52px 16px 26px; }
+  .pdfcs-head { margin-bottom: 22px; }
+  .pdfcs-stage { height: 46vh; min-height: 240px; border-radius: 10px; }
+  .pdfcs-nav { width: 38px; height: 38px; font-size: 1.3rem; }
+  .pdfcs-prev { left: 8px; }
+  .pdfcs-next { right: 8px; }
+  .pdfcs-hint { display: none; }
+  .pdfcs-thumb { width: 62px; height: 46px; }
+  .pdfcs-panel { padding: 20px 16px; }
+  .pdfcs-row { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .pdfcs-v { text-align: left; }
+  .pdfcs-tag { font-size: 0.74rem; padding: 6px 12px; }
+  .pdfcs-zoom-meta { top: 20px; left: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pdfcs-overlay, .pdfcs-shell, .pdfcs-slide, .pdfcs-zoom { transition-duration: 0.01ms; }
+  .pdfcs-progress span { transition: none; }
+}
 </style>
    <link rel="icon" type="image/png" href="favicon.png">
    <link rel="canonical" href="https://www.sbtexmedia.com/">
@@ -2669,7 +3063,7 @@ style="width:120%;height:120%;object-fit:cover;object-position:center top;">
       <div class="portfolio-item" data-category="pdf" data-title="Legal Contract Redesign" data-service="pdf-editing">
         <div class="portfolio-item-img" data-icon="pdf-editing"></div>
         <div class="portfolio-overlay">
-          <button class="portfolio-view-btn" onclick="openModal('Legal Contract Redesign','pdf','Complete restructuring of a multi-page legal contract PDF with fillable form fields, digital signature blocks, and professional formatting for a US law firm.')">View Case Study</button>
+          <button class="portfolio-view-btn" onclick="openPdfEditingCaseStudy()">View Case Study</button>
         </div>
         <div class="portfolio-item-meta">
           <div class="portfolio-item-cat">PDF Editing</div>
@@ -2879,6 +3273,134 @@ View Case Study
 
       <a href="#contact" class="btn-primary" style="display:inline-block;" onclick="closeModal()">Start a Similar Project</a>
     </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     PDF EDITING CASE STUDY  ▸  "Legal Contract Redesign"
+     ------------------------------------------------------------------
+     Self-contained. Opened only by openPdfEditingCaseStudy().
+     The gallery + thumbnails are generated from the pdfEditingGallery
+     array in the script block — do not add slide markup by hand.
+     The copy below is placeholder text; replace it in place.
+     ══════════════════════════════════════════════════════════════════ -->
+<div class="pdfcs-overlay" id="pdfcsOverlay" role="dialog" aria-modal="true"
+     aria-labelledby="pdfcsTitle" aria-hidden="true">
+
+  <button class="pdfcs-close" id="pdfcsClose" aria-label="Close case study">&#10005;</button>
+
+  <div class="pdfcs-shell" id="pdfcsShell">
+    <div class="pdfcs-inner">
+
+      <header class="pdfcs-head">
+        <div class="pdfcs-eyebrow">PDF Editing &nbsp;&middot;&nbsp; Case Study</div>
+        <h2 class="pdfcs-title" id="pdfcsTitle">Legal Contract Redesign</h2>
+        <p class="pdfcs-lede">
+          Complete restructuring of a multi-page legal contract PDF with fillable form fields,
+          digital signature blocks, and professional formatting for a US law firm.
+        </p>
+      </header>
+
+      <div class="pdfcs-grid">
+
+        <!-- ── GALLERY ─────────────────────────────────────────── -->
+        <div class="pdfcs-gallery">
+          <div class="pdfcs-stage" id="pdfcsStage" aria-live="polite">
+            <!-- slides injected by JS -->
+            <button class="pdfcs-nav pdfcs-prev" id="pdfcsPrev" aria-label="Previous image">&lsaquo;</button>
+            <button class="pdfcs-nav pdfcs-next" id="pdfcsNext" aria-label="Next image">&rsaquo;</button>
+            <div class="pdfcs-hint">Click image to zoom</div>
+            <div class="pdfcs-counter" id="pdfcsCounter">1 / 10</div>
+            <div class="pdfcs-progress"><span id="pdfcsProgress"></span></div>
+          </div>
+          <div class="pdfcs-thumbs" id="pdfcsThumbs" role="tablist" aria-label="Gallery thumbnails"></div>
+        </div>
+
+        <!-- ── PROJECT DETAILS (placeholder copy — replace in place) ── -->
+        <aside class="pdfcs-panel">
+          <div class="pdfcs-panel-title">Project Details</div>
+
+          <div class="pdfcs-rows">
+            <div class="pdfcs-row"><span class="pdfcs-k">Project Title</span><span class="pdfcs-v">Legal Contract Redesign</span></div>
+            <div class="pdfcs-row"><span class="pdfcs-k">Category</span><span class="pdfcs-v">PDF Editing</span></div>
+            <div class="pdfcs-row"><span class="pdfcs-k">Software Used</span><span class="pdfcs-v">Adobe Acrobat Pro, InDesign</span></div>
+            <div class="pdfcs-row"><span class="pdfcs-k">Service Type</span><span class="pdfcs-v">Document Restructuring &amp; Formatting</span></div>
+            <div class="pdfcs-row"><span class="pdfcs-k">Industry</span><span class="pdfcs-v">Legal Services</span></div>
+            <div class="pdfcs-row"><span class="pdfcs-k">Completion Status</span><span class="pdfcs-v gold">Delivered</span></div>
+          </div>
+
+          <div class="pdfcs-block">
+            <div class="pdfcs-h">Deliverables</div>
+            <div class="pdfcs-tags">
+              <span class="pdfcs-tag">Print-ready PDF</span>
+              <span class="pdfcs-tag">Fillable form version</span>
+              <span class="pdfcs-tag">Signature blocks</span>
+              <span class="pdfcs-tag">Editable source file</span>
+              <span class="pdfcs-tag">Style guide</span>
+            </div>
+          </div>
+
+          <div class="pdfcs-block">
+            <div class="pdfcs-h">Project Overview</div>
+            <p class="pdfcs-p">
+              A multi-page contract arrived as a flattened scan with inconsistent typography and no
+              usable structure. The document was rebuilt from the ground up: a clear heading
+              hierarchy, numbered clauses, aligned tables, and an interactive layer that lets
+              clients complete and sign it without printing anything.
+            </p>
+          </div>
+
+          <div class="pdfcs-block">
+            <div class="pdfcs-h">Challenges</div>
+            <ul class="pdfcs-ul">
+              <li>Source pages were scanned images with no selectable text.</li>
+              <li>Clause numbering and cross-references drifted between sections.</li>
+              <li>Tables broke across page boundaries and lost their headers.</li>
+              <li>Signature pages had to satisfy the firm's compliance requirements.</li>
+            </ul>
+          </div>
+
+          <div class="pdfcs-block">
+            <div class="pdfcs-h">Solutions</div>
+            <ul class="pdfcs-ul">
+              <li>OCR pass followed by a manual proof of every clause.</li>
+              <li>Paragraph and character styles applied across the full document.</li>
+              <li>Repeating table headers and controlled page breaks.</li>
+              <li>Fillable fields with validation, plus digital signature blocks.</li>
+            </ul>
+          </div>
+
+          <div class="pdfcs-block">
+            <div class="pdfcs-h">Client Benefits</div>
+            <ul class="pdfcs-ul">
+              <li>Contracts are returned complete on the first send.</li>
+              <li>Turnaround dropped from days to hours.</li>
+              <li>A reusable template the firm applies to every new agreement.</li>
+              <li>Consistent, on-brand documents across the practice.</li>
+            </ul>
+          </div>
+
+          <a href="#contact" class="btn-primary pdfcs-cta" id="pdfcsCta">Start a Similar Project</a>
+        </aside>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FULLSCREEN ZOOM VIEWER (scroll / pinch to zoom, drag to pan) ── -->
+<div class="pdfcs-zoom" id="pdfcsZoom" role="dialog" aria-modal="true" aria-label="Zoomed image" aria-hidden="true">
+  <div class="pdfcs-zoom-meta" id="pdfcsZoomMeta">1 / 10</div>
+  <button class="pdfcs-zoom-close" id="pdfcsZoomClose" aria-label="Close zoom viewer">&#10005;</button>
+  <div class="pdfcs-zoom-canvas" id="pdfcsZoomCanvas">
+    <img id="pdfcsZoomImg" alt="">
+  </div>
+  <div class="pdfcs-zoom-bar">
+    <button class="pdfcs-zbtn" id="pdfcsZoomOut" aria-label="Zoom out">&minus;</button>
+    <span class="pdfcs-zlevel" id="pdfcsZoomLevel">100%</span>
+    <button class="pdfcs-zbtn" id="pdfcsZoomIn" aria-label="Zoom in">&plus;</button>
+    <button class="pdfcs-zbtn" id="pdfcsZoomReset" aria-label="Reset zoom">&#8634;</button>
   </div>
 </div>
 
@@ -3320,126 +3842,6 @@ function sbtexPaintIcons(root) {
   });
 }
 sbtexPaintIcons();
-
-/* ══════════════════════════════════════════════════════════════════════
-   PDF EDITING PORTFOLIO — SINGLE SOURCE OF TRUTH
-   ──────────────────────────────────────────────────────────────────────
-   TO SWAP AN IMAGE: just drop the .jpg into images/portfolio/pdf-editing/
-   using the exact filename below. No HTML edit. No JS edit. Nothing.
-   TO EDIT COPY:     change `title` / `desc` on the matching line below.
-   TO ADD AN ITEM:   add one more line to the array.
-
-   Images that are not uploaded yet fall back to the existing pdf-editing
-   icon automatically, so the live grid never shows a broken image. The
-   moment the real file exists at that path, it renders on next page load.
-
-   This block runs BEFORE the cursor binding, the filter NodeList, the
-   search index and the sync check further down, so these cards inherit
-   all of that behaviour without a single change to those systems.
-   ══════════════════════════════════════════════════════════════════════ */
-const SBTEX_PDF_EDITING_BASE = 'images/portfolio/pdf-editing/';
-
-const SBTEX_PDF_EDITING = [
-  { file: 'PDF-Editing-1.jpg',  title: 'Corporate Report Rebuild',
-    desc: 'A multi-page corporate report reconstructed inside the PDF: text corrections applied in place, consistent margins and column alignment restored, and headers, footers and page numbering standardised across every page.' },
-  { file: 'PDF-Editing-2.jpg',  title: 'Payroll Document Formatting',
-    desc: 'A recurring payroll document rebuilt as a clean, reusable layout — aligned figure columns, consistent typography, correct table rules, and a tidy header block that stays stable as the underlying values change.' },
-  { file: 'PDF-Editing-3.jpg',  title: 'Scanned Document Restoration',
-    desc: 'A low-quality scan cleaned, deskewed and sharpened, then rebuilt with selectable text so the finished PDF reads and prints as though it had been produced digitally from the start.' },
-  { file: 'PDF-Editing-4.jpg',  title: 'Branded Letterhead Conversion',
-    desc: 'An existing PDF re-laid onto the client brand: updated logo placement, corrected colour values, corporate typeface substitution, and matching first-page and continuation-page letterhead treatments.' },
-  { file: 'PDF-Editing-5.jpg',  title: 'Invoice Template Update',
-    desc: 'A business invoice PDF updated with revised company details, a restructured line-item table, corrected totals block, and consistent alignment so every future issue prints identically.' },
-  { file: 'PDF-Editing-6.jpg',  title: 'Technical Manual Revision',
-    desc: 'A technical manual revised page by page: replacement diagrams dropped in at the correct scale, superseded specifications updated, and figure captions and cross-references brought back into sequence.' },
-  { file: 'PDF-Editing-7.jpg',  title: 'Contract Amendment Formatting',
-    desc: 'Amended contract clauses inserted directly into the source PDF with matched typography, correct clause renumbering throughout, and clean signature and initial blocks on the execution pages.' },
-  { file: 'PDF-Editing-8.jpg',  title: 'Product Catalogue Refresh',
-    desc: 'A product catalogue refreshed without a rebuild — replacement product photography, revised pricing, updated specification tables, and reflowed pages that hold the original grid.' },
-  { file: 'PDF-Editing-9.jpg',  title: 'Accessibility & OCR Pass',
-    desc: 'An image-only PDF put through OCR and then structured for accessibility: reading order corrected, headings tagged, alternative text supplied for figures, and document language and title set.' },
-  { file: 'PDF-Editing-10.jpg', title: 'Presentation Handout Redesign',
-    desc: 'Slide exports reworked into a printable handout — consolidated pages, restored resolution on compressed graphics, corrected contrast for greyscale printing, and a clean cover and contents page.' }
-];
-
-(function sbtexRenderPdfEditing() {
-  const grid = document.getElementById('portfolioGrid');
-  if (!grid) return;
-
-  SBTEX_PDF_EDITING.forEach(function (p) {
-    /* ---- card shell: identical structure/classes to the existing cards ---- */
-    const card = document.createElement('div');
-    card.className = 'portfolio-item';
-    card.dataset.category = 'pdf';
-    card.dataset.title = p.title;
-    card.dataset.service = 'pdf-editing';
-
-    /* ---- image box ---- */
-    const box = document.createElement('div');
-    box.className = 'portfolio-item-img';
-
-    const img = document.createElement('img');
-    img.src = SBTEX_PDF_EDITING_BASE + p.file;
-    img.alt = p.title;
-    img.loading = 'lazy';
-    img.decoding = 'async';
-    /* inline so the existing stylesheet is not touched at all */
-    img.style.cssText =
-      'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;';
-    /* not uploaded yet -> fall back to the existing pdf-editing icon */
-    img.onerror = function () {
-      const parent = this.parentNode;
-      this.remove();
-      if (parent && !parent.querySelector('svg')) {
-        parent.innerHTML = sbtexIconSVG('pdf-editing');
-      }
-    };
-    box.appendChild(img);
-
-    /* ---- hover overlay + existing View Case Study button ---- */
-    const overlay = document.createElement('div');
-    overlay.className = 'portfolio-overlay';
-    const btn = document.createElement('button');
-    btn.className = 'portfolio-view-btn';
-    btn.textContent = 'View Case Study';
-    /* opens the EXISTING modal, single-image mode.
-       If the image is not uploaded yet, the modal shows the existing
-       "coming soon" placeholder instead of a broken image. Both handlers
-       clear themselves so no other category is ever affected. */
-    btn.addEventListener('click', function () {
-      const src = SBTEX_PDF_EDITING_BASE + p.file;
-      const mi = document.getElementById('modalImage');
-      if (mi) {
-        mi.onerror = function () {
-          this.onerror = null; this.onload = null;
-          this.src = SBTEX_DEMO_IMG;
-        };
-        mi.onload = function () {
-          this.onerror = null; this.onload = null;
-        };
-      }
-      openModal(p.title, 'pdf', p.desc, src);
-    });
-    overlay.appendChild(btn);
-
-    /* ---- meta block ---- */
-    const meta = document.createElement('div');
-    meta.className = 'portfolio-item-meta';
-    const cat = document.createElement('div');
-    cat.className = 'portfolio-item-cat';
-    cat.textContent = 'PDF Editing';
-    const title = document.createElement('div');
-    title.className = 'portfolio-item-title';
-    title.textContent = p.title;
-    meta.appendChild(cat);
-    meta.appendChild(title);
-
-    card.appendChild(box);
-    card.appendChild(overlay);
-    card.appendChild(meta);
-    grid.appendChild(card);
-  });
-})();
 
 /* ══ LOADER ══ */
 const loader = document.getElementById('loader');
@@ -4342,6 +4744,437 @@ window.addEventListener('scroll', () => {
     a.style.color = a.getAttribute('href') === '#' + current ? 'var(--gold)' : '';
   });
 });
+
+/* ══════════════════════════════════════════════════════════════════════
+   PDF EDITING CASE STUDY  ▸  "Legal Contract Redesign"
+   ----------------------------------------------------------------------
+   Self-contained module. Nothing outside this IIFE is read or written
+   except the single global it exposes: openPdfEditingCaseStudy().
+   All other portfolio items, galleries and modals are untouched.
+
+   ┌────────────────────────────────────────────────────────────────┐
+   │  TO ADD MORE IMAGES: add filenames to pdfEditingGallery below.  │
+   │  Nothing else changes — slides, thumbnails, the counter, the    │
+   │  autoplay loop and the zoom viewer all rebuild themselves.      │
+   │                                                                 │
+   │  Filenames already listed but not yet uploaded render as an     │
+   │  elegant placeholder slide. The moment the file exists on the   │
+   │  server it displays automatically, with no code change at all.  │
+   └────────────────────────────────────────────────────────────────┘
+   ══════════════════════════════════════════════════════════════════════ */
+(function pdfEditingCaseStudy() {
+
+  var PDF_EDITING_BASE = 'images/portfolio/pdf-editing/';
+
+  var pdfEditingGallery = [
+    'PDF-Editing-1.jpg',
+    'PDF-Editing-2.jpg',
+    'PDF-Editing-3.jpg',
+    'PDF-Editing-4.jpg',
+    'PDF-Editing-5.jpg',
+    'PDF-Editing-6.jpg',
+    'PDF-Editing-7.jpg',
+    'PDF-Editing-8.jpg',
+    'PDF-Editing-9.jpg',
+    'PDF-Editing-10.jpg'
+  ];
+
+  var AUTOPLAY_MS = 2000;   /* autoplay interval */
+  var TICK_MS     = 50;     /* progress-bar refresh */
+  var DRAG_MIN    = 55;     /* px before a drag counts as a slide change */
+  var CLICK_MAX   = 8;      /* px of movement still treated as a click */
+
+  /* ── Elements ──────────────────────────────────────────────────── */
+  var overlay   = document.getElementById('pdfcsOverlay');
+  var zoomEl    = document.getElementById('pdfcsZoom');
+  if (!overlay || !zoomEl) return;
+
+  var shell     = document.getElementById('pdfcsShell');
+  var stage     = document.getElementById('pdfcsStage');
+  var thumbsEl  = document.getElementById('pdfcsThumbs');
+  var counterEl = document.getElementById('pdfcsCounter');
+  var progressEl= document.getElementById('pdfcsProgress');
+  var closeBtn  = document.getElementById('pdfcsClose');
+  var prevBtn   = document.getElementById('pdfcsPrev');
+  var nextBtn   = document.getElementById('pdfcsNext');
+  var ctaBtn    = document.getElementById('pdfcsCta');
+
+  var zCanvas   = document.getElementById('pdfcsZoomCanvas');
+  var zImg      = document.getElementById('pdfcsZoomImg');
+  var zMeta     = document.getElementById('pdfcsZoomMeta');
+  var zLevel    = document.getElementById('pdfcsZoomLevel');
+  var zClose    = document.getElementById('pdfcsZoomClose');
+  var zIn       = document.getElementById('pdfcsZoomIn');
+  var zOut      = document.getElementById('pdfcsZoomOut');
+  var zReset    = document.getElementById('pdfcsZoomReset');
+
+  var ring      = document.getElementById('cursorRing');
+
+  /* ── State ─────────────────────────────────────────────────────── */
+  var built = false;
+  var slides = [];
+  var thumbs = [];
+  var index = 0;
+  var total = pdfEditingGallery.length;
+  var lastFocus = null;
+  var prevOverflow = '';
+
+  var timer = null, elapsed = 0, paused = false, hovering = false;
+
+  /* Keeps the site's custom cursor ring reacting to elements built later */
+  function bindCursor(el) {
+    if (!ring) return;
+    el.addEventListener('mouseenter', function () { ring.classList.add('hovered'); });
+    el.addEventListener('mouseleave', function () { ring.classList.remove('hovered'); });
+  }
+
+  function srcOf(i) { return PDF_EDITING_BASE + pdfEditingGallery[i]; }
+
+  /* ── Build slides + thumbnails from the array (once, on first open) ─ */
+  function build() {
+    if (built) return;
+    built = true;
+
+    pdfEditingGallery.forEach(function (file, i) {
+      /* Slide */
+      var slide = document.createElement('div');
+      slide.className = 'pdfcs-slide';
+      slide.setAttribute('role', 'group');
+      slide.setAttribute('aria-label', 'Image ' + (i + 1) + ' of ' + total);
+
+      var img = document.createElement('img');
+      img.src = srcOf(i);
+      img.alt = 'Legal Contract Redesign — PDF editing sample ' + (i + 1);
+      img.setAttribute('loading', i === 0 ? 'eager' : 'lazy');
+      img.setAttribute('decoding', 'async');
+      img.draggable = false;
+      img.addEventListener('error', function () {
+        img.setAttribute('data-broken', '1');
+        slide.setAttribute('data-missing', '1');
+      });
+      img.addEventListener('load', function () {
+        img.removeAttribute('data-broken');
+        slide.removeAttribute('data-missing');
+      });
+
+      var ph = document.createElement('div');
+      ph.className = 'pdfcs-ph';
+      ph.innerHTML = '<div class="pdfcs-ph-num">' + (i + 1) + '</div>' +
+                     '<div class="pdfcs-ph-txt">Image coming soon</div>';
+
+      slide.appendChild(img);
+      slide.appendChild(ph);
+      stage.insertBefore(slide, prevBtn);
+      slides.push(slide);
+
+      /* Thumbnail */
+      var t = document.createElement('button');
+      t.type = 'button';
+      t.className = 'pdfcs-thumb';
+      t.setAttribute('role', 'tab');
+      t.setAttribute('aria-label', 'Go to image ' + (i + 1));
+
+      var ti = document.createElement('img');
+      ti.src = srcOf(i);
+      ti.alt = '';
+      ti.setAttribute('loading', 'lazy');
+      ti.setAttribute('decoding', 'async');
+      ti.draggable = false;
+      ti.addEventListener('error', function () {
+        ti.setAttribute('data-broken', '1');
+        t.setAttribute('data-missing', '1');
+      });
+      ti.addEventListener('load', function () {
+        ti.removeAttribute('data-broken');
+        t.removeAttribute('data-missing');
+      });
+
+      var tph = document.createElement('span');
+      tph.className = 'pdfcs-thumb-ph';
+      tph.textContent = String(i + 1);
+
+      t.appendChild(ti);
+      t.appendChild(tph);
+      t.addEventListener('click', function () { goTo(i); restart(); });
+      bindCursor(t);
+      thumbsEl.appendChild(t);
+      thumbs.push(t);
+    });
+
+    render();
+  }
+
+  /* ── Render current slide state ────────────────────────────────── */
+  function render() {
+    slides.forEach(function (s, i) {
+      s.classList.toggle('is-active', i === index);
+      s.classList.toggle('is-before', i < index);
+      s.style.transform = '';
+    });
+    thumbs.forEach(function (t, i) {
+      t.classList.toggle('active', i === index);
+      t.setAttribute('aria-selected', i === index ? 'true' : 'false');
+    });
+    counterEl.textContent = (index + 1) + ' / ' + total;
+    if (thumbs[index]) {
+      thumbs[index].scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+    }
+  }
+
+  function goTo(i) {
+    index = (i % total + total) % total;   /* infinite loop, both directions */
+    render();
+    if (zoomEl.classList.contains('open')) loadZoom();
+  }
+  function step(dir) { goTo(index + dir); }
+
+  /* ── Autoplay ──────────────────────────────────────────────────── */
+  function tick() {
+    if (paused || hovering || zoomEl.classList.contains('open')) return;
+    elapsed += TICK_MS;
+    progressEl.style.width = Math.min(100, (elapsed / AUTOPLAY_MS) * 100) + '%';
+    if (elapsed >= AUTOPLAY_MS) { elapsed = 0; step(1); }
+  }
+  function start() {
+    stop();
+    elapsed = 0;
+    progressEl.style.width = '0%';
+    timer = setInterval(tick, TICK_MS);
+  }
+  function stop() {
+    if (timer) { clearInterval(timer); timer = null; }
+  }
+  function restart() { elapsed = 0; progressEl.style.width = '0%'; }
+
+  /* Pause while hovering, resume on leave */
+  stage.addEventListener('mouseenter', function () { hovering = true; });
+  stage.addEventListener('mouseleave', function () { hovering = false; restart(); });
+  thumbsEl.addEventListener('mouseenter', function () { hovering = true; });
+  thumbsEl.addEventListener('mouseleave', function () { hovering = false; });
+
+  /* ── Prev / Next ───────────────────────────────────────────────── */
+  prevBtn.addEventListener('click', function () { step(-1); restart(); });
+  nextBtn.addEventListener('click', function () { step(1); restart(); });
+  bindCursor(prevBtn); bindCursor(nextBtn); bindCursor(closeBtn);
+
+  /* ── Touch swipe + mouse drag on the stage ─────────────────────── */
+  (function dragModule() {
+    var down = false, startX = 0, startY = 0, dx = 0, moved = 0, id = null;
+
+    stage.addEventListener('pointerdown', function (e) {
+      if (e.button !== undefined && e.button !== 0) return;
+      down = true; id = e.pointerId;
+      startX = e.clientX; startY = e.clientY; dx = 0; moved = 0;
+      paused = true;
+      stage.classList.add('is-dragging');
+    });
+
+    stage.addEventListener('pointermove', function (e) {
+      if (!down || e.pointerId !== id) return;
+      dx = e.clientX - startX;
+      var dy = e.clientY - startY;
+      moved = Math.max(moved, Math.abs(dx), Math.abs(dy));
+      /* ignore mostly-vertical gestures so the panel can still scroll */
+      if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 12) return;
+      var cur = slides[index];
+      if (cur) cur.style.transform = 'translateX(' + dx + 'px)';
+    });
+
+    function release(e) {
+      if (!down || (e.pointerId !== undefined && e.pointerId !== id)) return;
+      down = false;
+      stage.classList.remove('is-dragging');
+      paused = false;
+      var cur = slides[index];
+      if (cur) cur.style.transform = '';
+
+      if (Math.abs(dx) > DRAG_MIN) {
+        step(dx < 0 ? 1 : -1);
+        restart();
+      } else if (moved <= CLICK_MAX) {
+        /* A tap/click that never really moved → open the zoom viewer */
+        openZoom();
+      }
+      dx = 0; moved = 0; id = null;
+    }
+
+    stage.addEventListener('pointerup', release);
+    stage.addEventListener('pointercancel', release);
+    stage.addEventListener('pointerleave', function (e) { if (down) release(e); });
+
+    /* Never let the browser's native image drag hijack the gesture */
+    stage.addEventListener('dragstart', function (e) { e.preventDefault(); });
+  })();
+
+  /* ══ FULLSCREEN ZOOM VIEWER ═════════════════════════════════════ */
+  var zScale = 1, zX = 0, zY = 0;
+  var MIN_SCALE = 1, MAX_SCALE = 6;
+
+  function applyZoom() {
+    zImg.style.transform = 'translate(' + zX + 'px,' + zY + 'px) scale(' + zScale + ')';
+    zLevel.textContent = Math.round(zScale * 100) + '%';
+  }
+  function resetZoom() { zScale = 1; zX = 0; zY = 0; applyZoom(); }
+
+  function loadZoom() {
+    var slide = slides[index];
+    var missing = slide && slide.getAttribute('data-missing') === '1';
+    zImg.style.visibility = missing ? 'hidden' : 'visible';
+    zImg.src = srcOf(index);
+    zImg.alt = 'Legal Contract Redesign — PDF editing sample ' + (index + 1);
+    zMeta.textContent = (index + 1) + ' / ' + total;
+    resetZoom();
+  }
+
+  function openZoom() {
+    loadZoom();
+    zoomEl.classList.add('open');
+    zoomEl.setAttribute('aria-hidden', 'false');
+    zClose.focus();
+  }
+  function closeZoom() {
+    zoomEl.classList.remove('open');
+    zoomEl.setAttribute('aria-hidden', 'true');
+    resetZoom();
+    restart();
+  }
+
+  function setScale(next, cx, cy) {
+    next = Math.min(MAX_SCALE, Math.max(MIN_SCALE, next));
+    if (next === zScale) return;
+    if (cx === undefined) { cx = 0; cy = 0; }
+    zX = cx - (cx - zX) * (next / zScale);
+    zY = cy - (cy - zY) * (next / zScale);
+    zScale = next;
+    if (zScale === 1) { zX = 0; zY = 0; }
+    applyZoom();
+  }
+
+  function pointerToCentre(e) {
+    var r = zCanvas.getBoundingClientRect();
+    return [e.clientX - r.left - r.width / 2, e.clientY - r.top - r.height / 2];
+  }
+
+  zCanvas.addEventListener('wheel', function (e) {
+    e.preventDefault();
+    var p = pointerToCentre(e);
+    setScale(zScale * (e.deltaY < 0 ? 1.15 : 1 / 1.15), p[0], p[1]);
+  }, { passive: false });
+
+  zCanvas.addEventListener('dblclick', function (e) {
+    var p = pointerToCentre(e);
+    setScale(zScale > 1 ? 1 : 2.5, p[0], p[1]);
+  });
+
+  zIn.addEventListener('click', function () { setScale(zScale * 1.3); });
+  zOut.addEventListener('click', function () { setScale(zScale / 1.3); });
+  zReset.addEventListener('click', resetZoom);
+  zClose.addEventListener('click', closeZoom);
+  [zIn, zOut, zReset, zClose].forEach(bindCursor);
+
+  zoomEl.addEventListener('click', function (e) {
+    if (e.target === zoomEl) closeZoom();
+  });
+
+  /* Pan when zoomed in, plus two-finger pinch zoom */
+  (function panModule() {
+    var pts = {}, panning = false, sx = 0, sy = 0, ox = 0, oy = 0;
+    var pinchStart = 0, scaleStart = 1;
+
+    function pointerList() {
+      return Object.keys(pts).map(function (k) { return pts[k]; });
+    }
+
+    zCanvas.addEventListener('pointerdown', function (e) {
+      pts[e.pointerId] = { x: e.clientX, y: e.clientY };
+      var list = pointerList();
+      if (list.length === 1 && zScale > 1) {
+        panning = true;
+        sx = e.clientX; sy = e.clientY; ox = zX; oy = zY;
+        zCanvas.setPointerCapture(e.pointerId);
+      } else if (list.length === 2) {
+        panning = false;
+        pinchStart = Math.hypot(list[0].x - list[1].x, list[0].y - list[1].y);
+        scaleStart = zScale;
+      }
+    });
+
+    zCanvas.addEventListener('pointermove', function (e) {
+      if (!pts[e.pointerId]) return;
+      pts[e.pointerId] = { x: e.clientX, y: e.clientY };
+      var list = pointerList();
+      if (list.length === 2 && pinchStart > 0) {
+        var d = Math.hypot(list[0].x - list[1].x, list[0].y - list[1].y);
+        setScale(scaleStart * (d / pinchStart));
+      } else if (panning) {
+        zX = ox + (e.clientX - sx);
+        zY = oy + (e.clientY - sy);
+        applyZoom();
+      }
+    });
+
+    function up(e) {
+      delete pts[e.pointerId];
+      if (pointerList().length < 2) pinchStart = 0;
+      if (pointerList().length === 0) panning = false;
+    }
+    zCanvas.addEventListener('pointerup', up);
+    zCanvas.addEventListener('pointercancel', up);
+    zCanvas.addEventListener('pointerleave', up);
+    zCanvas.addEventListener('dragstart', function (e) { e.preventDefault(); });
+  })();
+
+  /* ══ OPEN / CLOSE THE CASE STUDY ════════════════════════════════ */
+  function openCaseStudy() {
+    lastFocus = document.activeElement;
+    build();
+    goTo(0);
+    overlay.classList.add('open');
+    overlay.setAttribute('aria-hidden', 'false');
+    prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    paused = false; hovering = false;
+    start();
+    shell.scrollTop = 0;
+    closeBtn.focus();
+  }
+
+  function closeCaseStudy() {
+    closeZoom();
+    stop();
+    overlay.classList.remove('open');
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = prevOverflow;
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+
+  closeBtn.addEventListener('click', closeCaseStudy);
+  overlay.addEventListener('click', function (e) {
+    if (e.target === overlay || e.target === shell) closeCaseStudy();
+  });
+  if (ctaBtn) ctaBtn.addEventListener('click', closeCaseStudy);
+
+  /* ── Keyboard: arrows navigate, ESC closes zoom first, then modal ── */
+  document.addEventListener('keydown', function (e) {
+    var zoomOpen = zoomEl.classList.contains('open');
+    var modalOpen = overlay.classList.contains('open');
+    if (!zoomOpen && !modalOpen) return;
+
+    if (e.key === 'Escape') {
+      e.stopPropagation();
+      if (zoomOpen) closeZoom(); else closeCaseStudy();
+      return;
+    }
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); step(-1); restart(); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); step(1);  restart(); }
+    if (e.key === 'Home')       { e.preventDefault(); goTo(0);  restart(); }
+    if (e.key === 'End')        { e.preventDefault(); goTo(total - 1); restart(); }
+  }, true);
+
+  /* Single global entry point, called by the portfolio card's button */
+  window.openPdfEditingCaseStudy = openCaseStudy;
+})();
+
 </script>
    <a href="https://wa.me/8801799425851"
    class="whatsapp-float"
