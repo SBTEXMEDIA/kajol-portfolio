@@ -3321,6 +3321,126 @@ function sbtexPaintIcons(root) {
 }
 sbtexPaintIcons();
 
+/* ══════════════════════════════════════════════════════════════════════
+   PDF EDITING PORTFOLIO — SINGLE SOURCE OF TRUTH
+   ──────────────────────────────────────────────────────────────────────
+   TO SWAP AN IMAGE: just drop the .jpg into images/portfolio/pdf-editing/
+   using the exact filename below. No HTML edit. No JS edit. Nothing.
+   TO EDIT COPY:     change `title` / `desc` on the matching line below.
+   TO ADD AN ITEM:   add one more line to the array.
+
+   Images that are not uploaded yet fall back to the existing pdf-editing
+   icon automatically, so the live grid never shows a broken image. The
+   moment the real file exists at that path, it renders on next page load.
+
+   This block runs BEFORE the cursor binding, the filter NodeList, the
+   search index and the sync check further down, so these cards inherit
+   all of that behaviour without a single change to those systems.
+   ══════════════════════════════════════════════════════════════════════ */
+const SBTEX_PDF_EDITING_BASE = 'images/portfolio/pdf-editing/';
+
+const SBTEX_PDF_EDITING = [
+  { file: 'PDF-Editing-1.jpg',  title: 'Corporate Report Rebuild',
+    desc: 'A multi-page corporate report reconstructed inside the PDF: text corrections applied in place, consistent margins and column alignment restored, and headers, footers and page numbering standardised across every page.' },
+  { file: 'PDF-Editing-2.jpg',  title: 'Payroll Document Formatting',
+    desc: 'A recurring payroll document rebuilt as a clean, reusable layout — aligned figure columns, consistent typography, correct table rules, and a tidy header block that stays stable as the underlying values change.' },
+  { file: 'PDF-Editing-3.jpg',  title: 'Scanned Document Restoration',
+    desc: 'A low-quality scan cleaned, deskewed and sharpened, then rebuilt with selectable text so the finished PDF reads and prints as though it had been produced digitally from the start.' },
+  { file: 'PDF-Editing-4.jpg',  title: 'Branded Letterhead Conversion',
+    desc: 'An existing PDF re-laid onto the client brand: updated logo placement, corrected colour values, corporate typeface substitution, and matching first-page and continuation-page letterhead treatments.' },
+  { file: 'PDF-Editing-5.jpg',  title: 'Invoice Template Update',
+    desc: 'A business invoice PDF updated with revised company details, a restructured line-item table, corrected totals block, and consistent alignment so every future issue prints identically.' },
+  { file: 'PDF-Editing-6.jpg',  title: 'Technical Manual Revision',
+    desc: 'A technical manual revised page by page: replacement diagrams dropped in at the correct scale, superseded specifications updated, and figure captions and cross-references brought back into sequence.' },
+  { file: 'PDF-Editing-7.jpg',  title: 'Contract Amendment Formatting',
+    desc: 'Amended contract clauses inserted directly into the source PDF with matched typography, correct clause renumbering throughout, and clean signature and initial blocks on the execution pages.' },
+  { file: 'PDF-Editing-8.jpg',  title: 'Product Catalogue Refresh',
+    desc: 'A product catalogue refreshed without a rebuild — replacement product photography, revised pricing, updated specification tables, and reflowed pages that hold the original grid.' },
+  { file: 'PDF-Editing-9.jpg',  title: 'Accessibility & OCR Pass',
+    desc: 'An image-only PDF put through OCR and then structured for accessibility: reading order corrected, headings tagged, alternative text supplied for figures, and document language and title set.' },
+  { file: 'PDF-Editing-10.jpg', title: 'Presentation Handout Redesign',
+    desc: 'Slide exports reworked into a printable handout — consolidated pages, restored resolution on compressed graphics, corrected contrast for greyscale printing, and a clean cover and contents page.' }
+];
+
+(function sbtexRenderPdfEditing() {
+  const grid = document.getElementById('portfolioGrid');
+  if (!grid) return;
+
+  SBTEX_PDF_EDITING.forEach(function (p) {
+    /* ---- card shell: identical structure/classes to the existing cards ---- */
+    const card = document.createElement('div');
+    card.className = 'portfolio-item';
+    card.dataset.category = 'pdf';
+    card.dataset.title = p.title;
+    card.dataset.service = 'pdf-editing';
+
+    /* ---- image box ---- */
+    const box = document.createElement('div');
+    box.className = 'portfolio-item-img';
+
+    const img = document.createElement('img');
+    img.src = SBTEX_PDF_EDITING_BASE + p.file;
+    img.alt = p.title;
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    /* inline so the existing stylesheet is not touched at all */
+    img.style.cssText =
+      'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;';
+    /* not uploaded yet -> fall back to the existing pdf-editing icon */
+    img.onerror = function () {
+      const parent = this.parentNode;
+      this.remove();
+      if (parent && !parent.querySelector('svg')) {
+        parent.innerHTML = sbtexIconSVG('pdf-editing');
+      }
+    };
+    box.appendChild(img);
+
+    /* ---- hover overlay + existing View Case Study button ---- */
+    const overlay = document.createElement('div');
+    overlay.className = 'portfolio-overlay';
+    const btn = document.createElement('button');
+    btn.className = 'portfolio-view-btn';
+    btn.textContent = 'View Case Study';
+    /* opens the EXISTING modal, single-image mode.
+       If the image is not uploaded yet, the modal shows the existing
+       "coming soon" placeholder instead of a broken image. Both handlers
+       clear themselves so no other category is ever affected. */
+    btn.addEventListener('click', function () {
+      const src = SBTEX_PDF_EDITING_BASE + p.file;
+      const mi = document.getElementById('modalImage');
+      if (mi) {
+        mi.onerror = function () {
+          this.onerror = null; this.onload = null;
+          this.src = SBTEX_DEMO_IMG;
+        };
+        mi.onload = function () {
+          this.onerror = null; this.onload = null;
+        };
+      }
+      openModal(p.title, 'pdf', p.desc, src);
+    });
+    overlay.appendChild(btn);
+
+    /* ---- meta block ---- */
+    const meta = document.createElement('div');
+    meta.className = 'portfolio-item-meta';
+    const cat = document.createElement('div');
+    cat.className = 'portfolio-item-cat';
+    cat.textContent = 'PDF Editing';
+    const title = document.createElement('div');
+    title.className = 'portfolio-item-title';
+    title.textContent = p.title;
+    meta.appendChild(cat);
+    meta.appendChild(title);
+
+    card.appendChild(box);
+    card.appendChild(overlay);
+    card.appendChild(meta);
+    grid.appendChild(card);
+  });
+})();
+
 /* ══ LOADER ══ */
 const loader = document.getElementById('loader');
 window.addEventListener('load', () => {
