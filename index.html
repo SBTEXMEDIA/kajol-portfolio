@@ -2696,14 +2696,14 @@ style="width:120%;height:120%;object-fit:cover;object-position:center top;">
           <div class="portfolio-item-title">Product Photo Retouching</div>
         </div>
       </div>
-      <div class="portfolio-item" data-category="design" data-title="Social Media Kit" data-service="graphic-design">
+      <div class="portfolio-item" data-category="design" data-title="Graphic Design Showcase" data-service="graphic-design">
         <div class="portfolio-item-img" data-icon="graphic-design"></div>
         <div class="portfolio-overlay">
-          <button class="portfolio-view-btn" onclick="openModal('Social Media Kit','design','Complete social media template pack for Instagram, Facebook & LinkedIn for a UAE real estate company.')">View Case Study</button>
+          <button class="portfolio-view-btn" onclick="openModal('Graphic Design Showcase','design','A cross-industry graphic design collection spanning event badges and signage, non-profit organisational profiles, technical product labels, blockchain and process infographics, typographic quote art, and apparel graphics for tournaments, awareness campaigns and family events. Every piece is built on a clear visual hierarchy, deliberate colour systems, and print-ready output.','images/portfolio/graphic-design/graphic-design-01.jpg','graphicDesign')">View Case Study</button>
         </div>
         <div class="portfolio-item-meta">
           <div class="portfolio-item-cat">Graphic Design</div>
-          <div class="portfolio-item-title">Social Media Kit</div>
+          <div class="portfolio-item-title">Graphic Design Showcase</div>
         </div>
          </div>
       <div class="portfolio-item" data-category="Shorts" data-title="Video Editing" data-service="video-editing">
@@ -3645,6 +3645,10 @@ const galleries = {
       'portfolio/portfolio-fillable-form-8.jpg',
       'portfolio/portfolio-fillable-form-9.jpg'
     ],
+    /* NOTE: this info block mirrors the static HTML in #projectInfo exactly.
+       It exists so the panel is re-rendered on every open — without it, this
+       gallery would keep whichever info panel the previously-opened gallery
+       left behind. */
     info: {
       rows: [
         ['Project', 'Interactive Business Form', false],
@@ -3699,6 +3703,42 @@ const galleries = {
         ['Adobe Illustrator', 'Software'],
         ['24 Hours', 'Delivery'],
         ['Starting at $30', 'Price']
+      ]
+    }
+  },
+  graphicDesign: {
+    images: [
+      'images/portfolio/graphic-design/graphic-design-01.jpg',
+      'images/portfolio/graphic-design/graphic-design-02.jpg',
+      'images/portfolio/graphic-design/graphic-design-03.jpg',
+      'images/portfolio/graphic-design/graphic-design-04.jpg',
+      'images/portfolio/graphic-design/graphic-design-05.jpg',
+      'images/portfolio/graphic-design/graphic-design-06.jpg',
+      'images/portfolio/graphic-design/graphic-design-07.jpg',
+      'images/portfolio/graphic-design/graphic-design-08.jpg',
+      'images/portfolio/graphic-design/graphic-design-09.jpg',
+      'images/portfolio/graphic-design/graphic-design-10.jpg'
+    ],
+    info: {
+      rows: [
+        ['Project', 'Graphic Design Showcase', false],
+        ['Category', 'Graphic Design', false],
+        ['Industry', 'Events, Non-Profit, Fintech & Apparel', false],
+        ['Price', 'Starting at $25', true],
+        ['Delivery', '24 Hours', false],
+        ['Software', 'Illustrator, Photoshop, Canva', false]
+      ],
+      features: [
+        '✔ Event Badges & Signage', '✔ Infographic Design', '✔ Organisational Profiles',
+        '✔ Product Labels & Stickers', '✔ Typography & Quote Art', '✔ T-Shirt & Apparel Graphics',
+        '✔ Source Files Included', '✔ AI', '✔ PSD', '✔ PDF', '✔ PNG',
+        '✔ Transparent Background', '✔ Print Ready', '✔ Social Media Ready',
+        '✔ Unlimited Revisions'
+      ],
+      stats: [
+        ['Illustrator & Photoshop', 'Software'],
+        ['24 Hours', 'Delivery'],
+        ['Starting at $25', 'Price']
       ]
     }
   }
