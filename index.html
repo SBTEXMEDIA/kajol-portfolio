@@ -2679,8 +2679,26 @@ footer {
   .pdfcs-zoom-meta { top: 20px; left: 16px; }
 }
 
-/* Only the active project's header + details panel are shown */
-.pdfcs-head[hidden], .pdfcs-panel[hidden] { display: none; }
+/* Video slides sit under exactly the same aspect-ratio rules as images */
+.pdfcs-slide video {
+  max-width: 100%; max-height: 100%;
+  width: auto; height: auto;
+  object-fit: contain;
+  border-radius: 6px;
+  background: #000;
+  display: block;
+}
+.pdfcs-slide video[data-broken="1"] { display: none; }
+.pdfcs-thumb video { width: 100%; height: 100%; object-fit: cover; }
+.pdfcs-thumb video[data-broken="1"] { display: none; }
+.pdfcs-thumb[data-video="1"]::after {
+  content: '\25B6';
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold); font-size: 0.78rem;
+  text-shadow: 0 0 6px rgba(0,0,0,0.9);
+  pointer-events: none;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .pdfcs-overlay, .pdfcs-shell, .pdfcs-slide, .pdfcs-zoom { transition-duration: 0.01ms; }
@@ -3106,7 +3124,7 @@ style="width:120%;height:120%;object-fit:cover;object-position:center top;">
       <div class="portfolio-item" data-category="Shorts" data-title="Video Editing" data-service="video-editing">
         <div class="portfolio-item-img" data-icon="video-editing"></div>
         <div class="portfolio-overlay">
-          <button class="portfolio-view-btn" onclick="openModal('YouTube Video Editing','Reels','Complete social media template pack for Instagram, Facebook & LinkedIn for a UAE real estate company.')">View Case Study</button>
+          <button class="portfolio-view-btn" onclick="openSbtexCaseStudy('videoEditing')">View Case Study</button>
         </div>
         <div class="portfolio-item-meta">
           <div class="portfolio-item-cat">Video Editing</div>
@@ -3116,7 +3134,7 @@ style="width:120%;height:120%;object-fit:cover;object-position:center top;">
       <div class="portfolio-item" data-category="vector" data-title="Hand-Drawn to Vector" data-service="vector-design">
         <div class="portfolio-item-img" data-icon="vector-design"></div>
         <div class="portfolio-overlay">
-          <button class="portfolio-view-btn" onclick="openModal('Hand-Drawn to Vector','vector','Converted a hand-sketched mascot character into clean SVG vector art for a Canadian startup.')">View Case Study</button>
+          <button class="portfolio-view-btn" onclick="openSbtexCaseStudy('vectorDesign')">View Case Study</button>
         </div>
         <div class="portfolio-item-meta">
           <div class="portfolio-item-cat">Vector Tracing</div>
@@ -3139,7 +3157,7 @@ View Case Study
       <div class="portfolio-item" data-category="lead-magnet" data-title="Client Onboarding Checklist" data-service="lead-magnet">
         <div class="portfolio-item-img" data-icon="lead-magnet"></div>
         <div class="portfolio-overlay">
-          <button class="portfolio-view-btn" onclick="openModalService('leadMagnet')">View Case Study</button>
+          <button class="portfolio-view-btn" onclick="openSbtexCaseStudy('leadMagnet')">View Case Study</button>
         </div>
         <div class="portfolio-item-meta">
           <div class="portfolio-item-cat">Lead Magnet Design</div>
@@ -3149,7 +3167,7 @@ View Case Study
       <div class="portfolio-item" data-category="ebook-workbook" data-title="Brand Strategy Ebook" data-service="ebook-workbook">
         <div class="portfolio-item-img" data-icon="ebook"></div>
         <div class="portfolio-overlay">
-          <button class="portfolio-view-btn" onclick="openModalService('ebookDesign')">View Case Study</button>
+          <button class="portfolio-view-btn" onclick="openSbtexCaseStudy('ebookDesign')">View Case Study</button>
         </div>
         <div class="portfolio-item-meta">
           <div class="portfolio-item-cat">Ebook Design</div>
@@ -3159,7 +3177,7 @@ View Case Study
       <div class="portfolio-item" data-category="ebook-workbook" data-title="Goal-Setting Workbook" data-service="ebook-workbook">
         <div class="portfolio-item-img" data-icon="workbook"></div>
         <div class="portfolio-overlay">
-          <button class="portfolio-view-btn" onclick="openModalService('workbookDesign')">View Case Study</button>
+          <button class="portfolio-view-btn" onclick="openSbtexCaseStudy('workbookDesign')">View Case Study</button>
         </div>
         <div class="portfolio-item-meta">
           <div class="portfolio-item-cat">Workbook Design</div>
@@ -3169,7 +3187,7 @@ View Case Study
       <div class="portfolio-item" data-category="google-forms" data-title="Client Intake &amp; Survey System" data-service="google-forms">
         <div class="portfolio-item-img" data-icon="google-forms"></div>
         <div class="portfolio-overlay">
-          <button class="portfolio-view-btn" onclick="openModalService('googleForms')">View Case Study</button>
+          <button class="portfolio-view-btn" onclick="openSbtexCaseStudy('googleForms')">View Case Study</button>
         </div>
         <div class="portfolio-item-meta">
           <div class="portfolio-item-cat">Google Forms</div>
@@ -3179,7 +3197,7 @@ View Case Study
       <div class="portfolio-item" data-category="jotform" data-title="Payment &amp; Workflow Form" data-service="jotform">
         <div class="portfolio-item-img" data-icon="jotform"></div>
         <div class="portfolio-overlay">
-          <button class="portfolio-view-btn" onclick="openModalService('jotform')">View Case Study</button>
+          <button class="portfolio-view-btn" onclick="openSbtexCaseStudy('jotform')">View Case Study</button>
         </div>
         <div class="portfolio-item-meta">
           <div class="portfolio-item-cat">Jotform</div>
@@ -3189,7 +3207,7 @@ View Case Study
       <div class="portfolio-item" data-category="word-formatting" data-title="Corporate Report Formatting" data-service="word-formatting">
         <div class="portfolio-item-img" data-icon="word-formatting"></div>
         <div class="portfolio-overlay">
-          <button class="portfolio-view-btn" onclick="openModalService('wordFormatting')">View Case Study</button>
+          <button class="portfolio-view-btn" onclick="openSbtexCaseStudy('wordFormatting')">View Case Study</button>
         </div>
         <div class="portfolio-item-meta">
           <div class="portfolio-item-cat">Microsoft Word Formatting</div>
@@ -3199,7 +3217,7 @@ View Case Study
       <div class="portfolio-item" data-category="excel-templates" data-title="Business Tracking Dashboard" data-service="excel-templates">
         <div class="portfolio-item-img" data-icon="excel-templates"></div>
         <div class="portfolio-overlay">
-          <button class="portfolio-view-btn" onclick="openModalService('excelTemplates')">View Case Study</button>
+          <button class="portfolio-view-btn" onclick="openSbtexCaseStudy('excelTemplates')">View Case Study</button>
         </div>
         <div class="portfolio-item-meta">
           <div class="portfolio-item-cat">Microsoft Excel Templates</div>
@@ -3298,23 +3316,8 @@ View Case Study
   <div class="pdfcs-shell" id="pdfcsShell">
     <div class="pdfcs-inner">
 
-      <header class="pdfcs-head" data-cs="pdfEditing">
-        <div class="pdfcs-eyebrow">PDF Editing &nbsp;&middot;&nbsp; Case Study</div>
-        <h2 class="pdfcs-title" id="pdfcsTitle">Legal Contract Redesign</h2>
-        <p class="pdfcs-lede">
-          Complete restructuring of a multi-page legal contract PDF with fillable form fields,
-          digital signature blocks, and professional formatting for a US law firm.
-        </p>
-      </header>
-
-      <header class="pdfcs-head" data-cs="imageEditing" hidden>
-        <div class="pdfcs-eyebrow">Image Editing &nbsp;&middot;&nbsp; Case Study</div>
-        <h2 class="pdfcs-title" id="pdfcsTitleImage">Product Photo Retouching</h2>
-        <p class="pdfcs-lede">
-          Batch background removal and colour correction for an e-commerce store
-          with 50+ product images.
-        </p>
-      </header>
+      <!-- Header + details panel are rendered from CASE_STUDIES on open -->
+      <header class="pdfcs-head" id="pdfcsHead"></header>
 
       <div class="pdfcs-grid">
 
@@ -3331,139 +3334,7 @@ View Case Study
           <div class="pdfcs-thumbs" id="pdfcsThumbs" role="tablist" aria-label="Gallery thumbnails"></div>
         </div>
 
-        <!-- ── PROJECT DETAILS (placeholder copy — replace in place) ── -->
-        <aside class="pdfcs-panel" data-cs="pdfEditing">
-          <div class="pdfcs-panel-title">Project Details</div>
-
-          <div class="pdfcs-rows">
-            <div class="pdfcs-row"><span class="pdfcs-k">Project Title</span><span class="pdfcs-v">Legal Contract Redesign</span></div>
-            <div class="pdfcs-row"><span class="pdfcs-k">Category</span><span class="pdfcs-v">PDF Editing</span></div>
-            <div class="pdfcs-row"><span class="pdfcs-k">Software Used</span><span class="pdfcs-v">Adobe Acrobat Pro, InDesign</span></div>
-            <div class="pdfcs-row"><span class="pdfcs-k">Service Type</span><span class="pdfcs-v">Document Restructuring &amp; Formatting</span></div>
-            <div class="pdfcs-row"><span class="pdfcs-k">Industry</span><span class="pdfcs-v">Legal Services</span></div>
-            <div class="pdfcs-row"><span class="pdfcs-k">Completion Status</span><span class="pdfcs-v gold">Delivered</span></div>
-          </div>
-
-          <div class="pdfcs-block">
-            <div class="pdfcs-h">Deliverables</div>
-            <div class="pdfcs-tags">
-              <span class="pdfcs-tag">Print-ready PDF</span>
-              <span class="pdfcs-tag">Fillable form version</span>
-              <span class="pdfcs-tag">Signature blocks</span>
-              <span class="pdfcs-tag">Editable source file</span>
-              <span class="pdfcs-tag">Style guide</span>
-            </div>
-          </div>
-
-          <div class="pdfcs-block">
-            <div class="pdfcs-h">Project Overview</div>
-            <p class="pdfcs-p">
-              A multi-page contract arrived as a flattened scan with inconsistent typography and no
-              usable structure. The document was rebuilt from the ground up: a clear heading
-              hierarchy, numbered clauses, aligned tables, and an interactive layer that lets
-              clients complete and sign it without printing anything.
-            </p>
-          </div>
-
-          <div class="pdfcs-block">
-            <div class="pdfcs-h">Challenges</div>
-            <ul class="pdfcs-ul">
-              <li>Source pages were scanned images with no selectable text.</li>
-              <li>Clause numbering and cross-references drifted between sections.</li>
-              <li>Tables broke across page boundaries and lost their headers.</li>
-              <li>Signature pages had to satisfy the firm's compliance requirements.</li>
-            </ul>
-          </div>
-
-          <div class="pdfcs-block">
-            <div class="pdfcs-h">Solutions</div>
-            <ul class="pdfcs-ul">
-              <li>OCR pass followed by a manual proof of every clause.</li>
-              <li>Paragraph and character styles applied across the full document.</li>
-              <li>Repeating table headers and controlled page breaks.</li>
-              <li>Fillable fields with validation, plus digital signature blocks.</li>
-            </ul>
-          </div>
-
-          <div class="pdfcs-block">
-            <div class="pdfcs-h">Client Benefits</div>
-            <ul class="pdfcs-ul">
-              <li>Contracts are returned complete on the first send.</li>
-              <li>Turnaround dropped from days to hours.</li>
-              <li>A reusable template the firm applies to every new agreement.</li>
-              <li>Consistent, on-brand documents across the practice.</li>
-            </ul>
-          </div>
-
-          <a href="#contact" class="btn-primary pdfcs-cta" id="pdfcsCta">Start a Similar Project</a>
-        </aside>
-
-        <aside class="pdfcs-panel" data-cs="imageEditing" hidden>
-          <div class="pdfcs-panel-title">Project Details</div>
-
-          <div class="pdfcs-rows">
-            <div class="pdfcs-row"><span class="pdfcs-k">Project Title</span><span class="pdfcs-v">Product Photo Retouching</span></div>
-            <div class="pdfcs-row"><span class="pdfcs-k">Category</span><span class="pdfcs-v">Image Editing</span></div>
-            <div class="pdfcs-row"><span class="pdfcs-k">Software Used</span><span class="pdfcs-v">Adobe Photoshop, Lightroom Classic</span></div>
-            <div class="pdfcs-row"><span class="pdfcs-k">Industry</span><span class="pdfcs-v">E-commerce &amp; Retail</span></div>
-            <div class="pdfcs-row"><span class="pdfcs-k">Service Type</span><span class="pdfcs-v">Retouching &amp; Background Removal</span></div>
-          </div>
-
-          <div class="pdfcs-block">
-            <div class="pdfcs-h">Project Overview</div>
-            <p class="pdfcs-p">
-              A retail catalogue shot across several sessions arrived with mismatched
-              lighting, cluttered backgrounds and inconsistent framing. Every frame was
-              cut out, colour-matched to the physical product, and re-exported at a single
-              size and crop ratio so the storefront reads as one coherent set.
-            </p>
-          </div>
-
-          <div class="pdfcs-block">
-            <div class="pdfcs-h">Challenges</div>
-            <ul class="pdfcs-ul">
-              <li>White balance drifted between shooting sessions.</li>
-              <li>Reflective and semi-transparent surfaces resisted clean cut-outs.</li>
-              <li>Fine edges — hair, mesh, fabric weave — needed masking, not selection.</li>
-              <li>Marketplace listings enforce a fixed frame and margin.</li>
-            </ul>
-          </div>
-
-          <div class="pdfcs-block">
-            <div class="pdfcs-h">Solution</div>
-            <ul class="pdfcs-ul">
-              <li>A calibrated Lightroom profile applied across the full batch.</li>
-              <li>Hand-refined masks with edge decontamination on difficult surfaces.</li>
-              <li>Frequency separation for blemish and dust removal on close-ups.</li>
-              <li>A batch export action locking size, margin and colour profile.</li>
-            </ul>
-          </div>
-
-          <div class="pdfcs-block">
-            <div class="pdfcs-h">Client Benefits</div>
-            <ul class="pdfcs-ul">
-              <li>Listings pass marketplace image review on first submission.</li>
-              <li>Returns from colour mismatch dropped noticeably.</li>
-              <li>A reusable preset the in-house team applies to new products.</li>
-              <li>One consistent look across storefront, ads and print.</li>
-            </ul>
-          </div>
-
-          <div class="pdfcs-block">
-            <div class="pdfcs-h">Deliverables</div>
-            <div class="pdfcs-tags">
-              <span class="pdfcs-tag">Transparent PNG cut-outs</span>
-              <span class="pdfcs-tag">White-background JPEGs</span>
-              <span class="pdfcs-tag">Lifestyle composites</span>
-              <span class="pdfcs-tag">Web-optimised exports</span>
-              <span class="pdfcs-tag">Layered PSD source</span>
-              <span class="pdfcs-tag">Lightroom preset</span>
-            </div>
-          </div>
-
-          <a href="#contact" class="btn-primary pdfcs-cta">Start a Similar Project</a>
-        </aside>
-
+        <aside class="pdfcs-panel" id="pdfcsPanel"></aside>
       </div>
     </div>
   </div>
@@ -4825,66 +4696,644 @@ window.addEventListener('scroll', () => {
   });
 });
 
-/* ══════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════════════
    SBTEXMEDIA SHARED CASE STUDY MODAL
    ------------------------------------------------------------------
-   Drives one modal for every gallery-backed portfolio project:
-     openSbtexCaseStudy('pdfEditing')     → Legal Contract Redesign
-     openSbtexCaseStudy('imageEditing')   → Product Photo Retouching
+   One modal serves every gallery-backed portfolio project. Open it with
+   openSbtexCaseStudy('<key>') where <key> is a CASE_STUDIES entry.
 
    Nothing outside this IIFE is read or written except the two globals
    it exposes. All other portfolio items and modals are untouched.
 
-   TO ADD MORE IMAGES
-     Add filenames to that project's images[] array in CASE_STUDIES
-     below. Slides, thumbnails, the counter, the autoplay loop and the
-     zoom viewer all rebuild themselves — no HTML editing.
-
+   TO ADD OR REPLACE IMAGES
+     Upload files using the same names into that project's base folder.
      Filenames listed but not yet uploaded render as a placeholder
-     slide. The moment the file exists on the server it displays
-     automatically, with no code change at all.
+     slide; the moment the file exists it displays automatically.
+     To go past ten, add filenames to that project's files[] array.
+     Slides, thumbnails, the counter, the autoplay loop and the zoom
+     viewer all rebuild themselves. No HTML editing, ever.
 
-   TO ADD A NEW PROJECT
-     Add a CASE_STUDIES entry, then add a matching [data-cs] header
-     and details panel to the modal markup.
-   ══════════════════════════════════════════════ */
+   TO EDIT THE WRITTEN CONTENT
+     Every heading, row and paragraph lives in CASE_STUDIES below.
+     The header and details panel are rendered from it on open.
+
+   MEDIA TYPES
+     .jpg .png .webp .gif  render as images (click to zoom / pan).
+     .mp4 .webm .mov .m4v  render as inline video players with native
+     controls and their own fullscreen; autoplay pauses while playing.
+   ══════════════════════════════════════════════════════════════════ */
 (function sbtexCaseStudyModal() {
 
+  /* ── Every case study lives here. Edit copy in place; add filenames
+        to files[] to extend a gallery. Nothing else needs touching. ── */
   var CASE_STUDIES = {
 
     pdfEditing: {
-      titleId: 'pdfcsTitle',
-      base: 'images/portfolio/pdf-editing/',
-      alt: 'Legal Contract Redesign — PDF editing sample ',
-      images: [
-        'PDF-Editing-1.jpg',
-        'PDF-Editing-2.jpg',
-        'PDF-Editing-3.jpg',
-        'PDF-Editing-4.jpg',
-        'PDF-Editing-5.jpg',
-        'PDF-Editing-6.jpg',
-        'PDF-Editing-7.jpg',
-        'PDF-Editing-8.jpg',
-        'PDF-Editing-9.jpg',
-        'PDF-Editing-10.jpg'
+      label: "PDF Editing",
+      title: "Legal Contract Redesign",
+      lede:  "Complete restructuring of a multi-page legal contract PDF with fillable form fields, digital signature blocks, and professional formatting for a US law firm.",
+      base:  "images/portfolio/pdf-editing/",
+      alt:   "Legal Contract Redesign — PDF editing sample ",
+      files: [
+        "PDF-Editing-1.jpg",
+        "PDF-Editing-2.jpg",
+        "PDF-Editing-3.jpg",
+        "PDF-Editing-4.jpg",
+        "PDF-Editing-5.jpg",
+        "PDF-Editing-6.jpg",
+        "PDF-Editing-7.jpg",
+        "PDF-Editing-8.jpg",
+        "PDF-Editing-9.jpg",
+        "PDF-Editing-10.jpg"
+      ],
+      rows: [
+        ["Project Title", "Legal Contract Redesign"],
+        ["Category", "PDF Editing"],
+        ["Software Used", "Adobe Acrobat Pro, InDesign"],
+        ["Service Type", "Document Restructuring & Formatting"],
+        ["Industry", "Legal Services"],
+        ["Completion Status", "Delivered", true]
+      ],
+      blocks: [
+        { h: "Deliverables", tags: [
+          "Print-ready PDF",
+          "Fillable form version",
+          "Signature blocks",
+          "Editable source file",
+          "Style guide"
+        ] },
+        { h: "Project Overview", p: "A multi-page contract arrived as a flattened scan with inconsistent typography and no usable structure. The document was rebuilt from the ground up: a clear heading hierarchy, numbered clauses, aligned tables, and an interactive layer that lets clients complete and sign it without printing anything." },
+        { h: "Challenges", list: [
+          "Source pages were scanned images with no selectable text.",
+          "Clause numbering and cross-references drifted between sections.",
+          "Tables broke across page boundaries and lost their headers.",
+          "Signature pages had to satisfy the firm's compliance requirements."
+        ] },
+        { h: "Solutions", list: [
+          "OCR pass followed by a manual proof of every clause.",
+          "Paragraph and character styles applied across the full document.",
+          "Repeating table headers and controlled page breaks.",
+          "Fillable fields with validation, plus digital signature blocks."
+        ] },
+        { h: "Client Benefits", list: [
+          "Contracts are returned complete on the first send.",
+          "Turnaround dropped from days to hours.",
+          "A reusable template the firm applies to every new agreement.",
+          "Consistent, on-brand documents across the practice."
+        ] }
       ]
     },
 
     imageEditing: {
-      titleId: 'pdfcsTitleImage',
-      base: 'images/portfolio/image-editing/',
-      alt: 'Product Photo Retouching — image editing sample ',
-      images: [
-        'Image-Editing-01.jpg',
-        'Image-Editing-02.jpg',
-        'Image-Editing-03.jpg',
-        'Image-Editing-04.jpg',
-        'Image-Editing-05.jpg',
-        'Image-Editing-06.jpg',
-        'Image-Editing-07.jpg',
-        'Image-Editing-08.jpg',
-        'Image-Editing-09.jpg',
-        'Image-Editing-10.jpg'
+      label: "Image Editing",
+      title: "Product Photo Retouching",
+      lede:  "Batch background removal and colour correction for an e-commerce store with 50+ product images.",
+      base:  "images/portfolio/image-editing/",
+      alt:   "Product Photo Retouching — image editing sample ",
+      files: [
+        "Image-Editing-01.jpg",
+        "Image-Editing-02.jpg",
+        "Image-Editing-03.jpg",
+        "Image-Editing-04.jpg",
+        "Image-Editing-05.jpg",
+        "Image-Editing-06.jpg",
+        "Image-Editing-07.jpg",
+        "Image-Editing-08.jpg",
+        "Image-Editing-09.jpg",
+        "Image-Editing-10.jpg"
+      ],
+      rows: [
+        ["Project Title", "Product Photo Retouching"],
+        ["Category", "Image Editing"],
+        ["Software Used", "Adobe Photoshop, Lightroom Classic"],
+        ["Industry", "E-commerce & Retail"],
+        ["Service Type", "Retouching & Background Removal"]
+      ],
+      blocks: [
+        { h: "Project Overview", p: "A retail catalogue shot across several sessions arrived with mismatched lighting, cluttered backgrounds and inconsistent framing. Every frame was cut out, colour-matched to the physical product, and re-exported at a single size and crop ratio so the storefront reads as one coherent set." },
+        { h: "Challenges", list: [
+          "White balance drifted between shooting sessions.",
+          "Reflective and semi-transparent surfaces resisted clean cut-outs.",
+          "Fine edges — hair, mesh, fabric weave — needed masking, not selection.",
+          "Marketplace listings enforce a fixed frame and margin."
+        ] },
+        { h: "Solution", list: [
+          "A calibrated Lightroom profile applied across the full batch.",
+          "Hand-refined masks with edge decontamination on difficult surfaces.",
+          "Frequency separation for blemish and dust removal on close-ups.",
+          "A batch export action locking size, margin and colour profile."
+        ] },
+        { h: "Client Benefits", list: [
+          "Listings pass marketplace image review on first submission.",
+          "Returns from colour mismatch dropped noticeably.",
+          "A reusable preset the in-house team applies to new products.",
+          "One consistent look across storefront, ads and print."
+        ] },
+        { h: "Deliverables", tags: [
+          "Transparent PNG cut-outs",
+          "White-background JPEGs",
+          "Lifestyle composites",
+          "Web-optimised exports",
+          "Layered PSD source",
+          "Lightroom preset"
+        ] }
+      ]
+    },
+
+    videoEditing: {
+      label: "Video Editing",
+      title: "Video Editing",
+      lede:  "Short-form and long-form edits for YouTube and social: pacing, captions, colour and sound handled end to end.",
+      base:  "images/portfolio/video-editing/",
+      alt:   "Video Editing — sample clip ",
+      files: [
+        "Video-Editing-01.mp4",
+        "Video-Editing-02.mp4",
+        "Video-Editing-03.mp4",
+        "Video-Editing-04.mp4",
+        "Video-Editing-05.mp4",
+        "Video-Editing-06.mp4",
+        "Video-Editing-07.mp4",
+        "Video-Editing-08.mp4",
+        "Video-Editing-09.mp4",
+        "Video-Editing-10.mp4"
+      ],
+      rows: [
+        ["Project Title", "Video Editing"],
+        ["Category", "Video Editing"],
+        ["Software Used", "Adobe Premiere Pro, After Effects"],
+        ["Industry", "Content Marketing & Social Media"],
+        ["Service Type", "Video Editing & Motion Graphics"]
+      ],
+      blocks: [
+        { h: "Project Overview", p: "Raw footage from multiple cameras and phone recordings was cut into a publishing-ready set: a long-form edit for YouTube plus vertical cut-downs for Reels, Shorts and TikTok. Each version keeps the same colour treatment, caption style and audio level so the channel reads as one voice." },
+        { h: "Challenges", list: [
+          "Mixed sources with different frame rates, colour profiles and audio levels.",
+          "Long recordings needed aggressive trimming without losing the argument.",
+          "Vertical cut-downs had to keep the speaker framed and the text readable.",
+          "Captions had to stay accurate and legible with sound off."
+        ] },
+        { h: "Solution", list: [
+          "A conform pass normalising frame rate, colour space and loudness.",
+          "Paper edit first, then a tight assembly built around the key beats.",
+          "Reframing with motion tracking for every vertical export.",
+          "Burned-in captions proofed against the transcript, plus an SRT file."
+        ] },
+        { h: "Deliverables", tags: [
+          "YouTube master (1080p / 4K)",
+          "Vertical cut-downs",
+          "Burned-in captions",
+          "SRT caption file",
+          "Thumbnail stills",
+          "Project file"
+        ] },
+        { h: "Client Benefits", list: [
+          "One shoot supplies a full week of publishing.",
+          "Watch time improved through tighter pacing.",
+          "Consistent look and sound across every platform.",
+          "Captioned output reaches viewers watching muted."
+        ] }
+      ]
+    },
+
+    vectorDesign: {
+      label: "Vector Design",
+      title: "Hand-Drawn to Vector",
+      lede:  "Converted a hand-sketched mascot character into clean SVG vector art for a Canadian startup.",
+      base:  "images/portfolio/vector-design/",
+      alt:   "Vector Tracing — vector design sample ",
+      files: [
+        "Vector-Design-01.jpg",
+        "Vector-Design-02.jpg",
+        "Vector-Design-03.jpg",
+        "Vector-Design-04.jpg",
+        "Vector-Design-05.jpg",
+        "Vector-Design-06.jpg",
+        "Vector-Design-07.jpg",
+        "Vector-Design-08.jpg",
+        "Vector-Design-09.jpg",
+        "Vector-Design-10.jpg"
+      ],
+      rows: [
+        ["Project Title", "Hand-Drawn to Vector"],
+        ["Category", "Vector Design"],
+        ["Software Used", "Adobe Illustrator"],
+        ["Industry", "Branding & Merchandise"],
+        ["Service Type", "Vector Tracing & Artwork Redraw"]
+      ],
+      blocks: [
+        { h: "Project Overview", p: "A pencil sketch and a low-resolution logo scan were redrawn by hand as true vector artwork — not auto-traced. Curves were rebuilt with the minimum number of anchor points, the palette was mapped to spot colours, and the result scales from a favicon to a vehicle wrap without softening." },
+        { h: "Challenges", list: [
+          "Source art was a low-resolution scan with visible paper texture.",
+          "Auto-trace produced ragged edges and hundreds of stray points.",
+          "Line weights had to stay optically even at every size.",
+          "Print required spot colours; screen required a web palette."
+        ] },
+        { h: "Solution", list: [
+          "Full manual redraw with the pen tool over the scan as a guide.",
+          "Curves simplified to the fewest anchor points that hold the shape.",
+          "Optical weight corrections checked at icon and billboard scale.",
+          "Parallel colour builds for Pantone, CMYK and RGB output."
+        ] },
+        { h: "Deliverables", tags: [
+          "Layered AI source",
+          "SVG",
+          "EPS",
+          "Print-ready PDF",
+          "Transparent PNG set",
+          "One-colour variant"
+        ] },
+        { h: "Client Benefits", list: [
+          "Artwork usable on any medium at any size.",
+          "Clean files that print shops accept without queries.",
+          "Reliable colour across print and screen.",
+          "A one-colour version ready for embroidery and stamps."
+        ] }
+      ]
+    },
+
+    leadMagnet: {
+      label: "Lead Magnet Design",
+      title: "Client Onboarding Checklist",
+      lede:  "A branded opt-in lead magnet built as a print-ready and screen-ready PDF, delivered with matching planner, cheat sheet and template variants.",
+      base:  "images/portfolio/lead-magnet/",
+      alt:   "Lead Magnet Design — sample page ",
+      files: [
+        "Lead-Magnet-01.jpg",
+        "Lead-Magnet-02.jpg",
+        "Lead-Magnet-03.jpg",
+        "Lead-Magnet-04.jpg",
+        "Lead-Magnet-05.jpg",
+        "Lead-Magnet-06.jpg",
+        "Lead-Magnet-07.jpg",
+        "Lead-Magnet-08.jpg",
+        "Lead-Magnet-09.jpg",
+        "Lead-Magnet-10.jpg"
+      ],
+      rows: [
+        ["Project Title", "Client Onboarding Checklist"],
+        ["Category", "Lead Magnet Design"],
+        ["Software Used", "Adobe InDesign, Illustrator"],
+        ["Industry", "Coaching & Professional Services"],
+        ["Service Type", "Lead Magnet & Opt-in Design"]
+      ],
+      blocks: [
+        { h: "Project Overview", p: "A long email sequence was reshaped into a single downloadable asset people actually finish: a cover that earns the click, a checklist body that stays usable when printed, and a closing page that routes readers to a booking link." },
+        { h: "Challenges", list: [
+          "Source copy was far longer than a lead magnet can carry.",
+          "The file had to read well on a phone and on paper.",
+          "Brand assets existed only as low-resolution web exports.",
+          "The call to action needed to land without feeling like a pitch."
+        ] },
+        { h: "Solution", list: [
+          "Copy cut to one idea per spread, with the rest moved to an appendix.",
+          "A layout grid that reflows cleanly between screen and print sizes.",
+          "Brand marks rebuilt as vector before placement.",
+          "A closing page pairing a short offer with a single clear action."
+        ] },
+        { h: "Deliverables", tags: [
+          "Screen-optimised PDF",
+          "Print-ready PDF",
+          "Editable source file",
+          "Cover graphic set",
+          "Social promo images"
+        ] },
+        { h: "Client Benefits", list: [
+          "Higher opt-in rate from a stronger cover and promise.",
+          "More readers reach the call to action.",
+          "A repeatable template for future magnets.",
+          "Assets sized for every promotion channel."
+        ] }
+      ]
+    },
+
+    ebookDesign: {
+      label: "Ebook Design",
+      title: "Brand Strategy Ebook",
+      lede:  "A multi-chapter ebook laid out end to end and exported as an interactive PDF with working bookmarks and internal links, plus a printable book version.",
+      base:  "images/portfolio/ebook/",
+      alt:   "Ebook Design — sample page ",
+      files: [
+        "Ebook-01.jpg",
+        "Ebook-02.jpg",
+        "Ebook-03.jpg",
+        "Ebook-04.jpg",
+        "Ebook-05.jpg",
+        "Ebook-06.jpg",
+        "Ebook-07.jpg",
+        "Ebook-08.jpg",
+        "Ebook-09.jpg",
+        "Ebook-10.jpg"
+      ],
+      rows: [
+        ["Project Title", "Brand Strategy Ebook"],
+        ["Category", "Ebook Design"],
+        ["Software Used", "Adobe InDesign, Photoshop"],
+        ["Industry", "Publishing & Digital Products"],
+        ["Service Type", "Ebook Layout & Interactive PDF"]
+      ],
+      blocks: [
+        { h: "Project Overview", p: "A manuscript in a single word-processor file became a designed book: cover, contents, chapter openers, pull quotes and image plates, with a navigation layer that lets readers jump between chapters on any device." },
+        { h: "Challenges", list: [
+          "Manuscript formatting was inconsistent from chapter to chapter.",
+          "Images arrived at mixed resolutions and colour spaces.",
+          "The contents page had to stay accurate through late edits.",
+          "One layout had to serve both screen reading and print."
+        ] },
+        { h: "Solution", list: [
+          "A full style sheet applied across the manuscript before layout.",
+          "Images resampled and colour-converted to a single standard.",
+          "An automatic table of contents driven by heading styles.",
+          "Parallel screen and print exports from one master document."
+        ] },
+        { h: "Deliverables", tags: [
+          "Interactive PDF",
+          "Print-ready PDF",
+          "Cover design",
+          "Chapter opener set",
+          "Editable source file"
+        ] },
+        { h: "Client Benefits", list: [
+          "A product that reads as professionally published.",
+          "Readers navigate long chapters without scrolling blindly.",
+          "Late edits reflow without breaking the layout.",
+          "One source file serves both download and print-on-demand."
+        ] }
+      ]
+    },
+
+    workbookDesign: {
+      label: "Workbook Design",
+      title: "Goal-Setting Workbook",
+      lede:  "A guided workbook combining writing prompts, exercise pages and tracking spreads, supplied as a printable PDF and a fillable digital planner.",
+      base:  "images/portfolio/workbook/",
+      alt:   "Workbook Design — sample page ",
+      files: [
+        "Workbook-01.jpg",
+        "Workbook-02.jpg",
+        "Workbook-03.jpg",
+        "Workbook-04.jpg",
+        "Workbook-05.jpg",
+        "Workbook-06.jpg",
+        "Workbook-07.jpg",
+        "Workbook-08.jpg",
+        "Workbook-09.jpg",
+        "Workbook-10.jpg"
+      ],
+      rows: [
+        ["Project Title", "Goal-Setting Workbook"],
+        ["Category", "Workbook Design"],
+        ["Software Used", "Adobe InDesign, Acrobat Pro"],
+        ["Industry", "Coaching & Education"],
+        ["Service Type", "Workbook Layout & Fillable Planner"]
+      ],
+      blocks: [
+        { h: "Project Overview", p: "Exercises that previously lived in a slide deck were rebuilt as a workbook people can complete: prompts with real writing room, tracking spreads that survive a year of use, and a fillable version for anyone working on a tablet." },
+        { h: "Challenges", list: [
+          "Prompts needed enough writing space without wasting pages.",
+          "Tracking grids had to stay legible after printing at home.",
+          "The digital version needed fields that save reliably.",
+          "Page order had to work for both sequential and dip-in use."
+        ] },
+        { h: "Solution", list: [
+          "Ruled response areas sized against handwriting tests.",
+          "Grid line weights tuned for home inkjet and laser output.",
+          "Named, tab-ordered form fields with saved-state support.",
+          "Section tabs and a page index for non-linear readers."
+        ] },
+        { h: "Deliverables", tags: [
+          "Printable workbook PDF",
+          "Fillable digital planner",
+          "Section divider set",
+          "Editable source file",
+          "Cover design"
+        ] },
+        { h: "Client Benefits", list: [
+          "Participants complete more of the exercises.",
+          "One product serves both print and tablet users.",
+          "Pages reprint cleanly on any home printer.",
+          "A structure reusable for future programme workbooks."
+        ] }
+      ]
+    },
+
+    googleForms: {
+      label: "Google Forms",
+      title: "Client Intake & Survey System",
+      lede:  "A multi-section Google Form with conditional logic, validation and file upload, wired to a linked response spreadsheet with automatic formatting and notifications.",
+      base:  "images/portfolio/google-forms/",
+      alt:   "Google Forms — form and spreadsheet sample ",
+      files: [
+        "Google-Forms-01.jpg",
+        "Google-Forms-02.jpg",
+        "Google-Forms-03.jpg",
+        "Google-Forms-04.jpg",
+        "Google-Forms-05.jpg",
+        "Google-Forms-06.jpg",
+        "Google-Forms-07.jpg",
+        "Google-Forms-08.jpg",
+        "Google-Forms-09.jpg",
+        "Google-Forms-10.jpg"
+      ],
+      rows: [
+        ["Project Title", "Client Intake & Survey System"],
+        ["Category", "Google Forms"],
+        ["Software Used", "Google Forms, Sheets, Apps Script"],
+        ["Industry", "Professional Services"],
+        ["Service Type", "Form Build & Response Automation"]
+      ],
+      blocks: [
+        { h: "Project Overview", p: "Intake that ran on email threads moved into a single structured form. Branching keeps each respondent on a short path, answers land in a formatted spreadsheet, and the team is notified the moment a submission needs attention." },
+        { h: "Challenges", list: [
+          "One form had to serve several client types without feeling long.",
+          "Free-text answers made the response sheet hard to read.",
+          "Required documents were arriving separately from the form.",
+          "Submissions were being missed in a shared inbox."
+        ] },
+        { h: "Solution", list: [
+          "Section branching so each respondent sees only relevant questions.",
+          "Validated inputs and structured choices in place of free text.",
+          "File upload wired to a dated folder per submission.",
+          "Apps Script formatting, routing and notification on submit."
+        ] },
+        { h: "Deliverables", tags: [
+          "Live Google Form",
+          "Linked response spreadsheet",
+          "Apps Script automation",
+          "Notification setup",
+          "Editable template copy"
+        ] },
+        { h: "Client Benefits", list: [
+          "Complete intakes with no follow-up emails.",
+          "Responses arrive ready to filter and report on.",
+          "Documents stay attached to the right submission.",
+          "Nothing waits unseen in an inbox."
+        ] }
+      ]
+    },
+
+    jotform: {
+      label: "Jotform",
+      title: "Payment & Workflow Form",
+      lede:  "A Jotform build with payment integration, conditional branching, calculated totals and an approval workflow that emails a formatted PDF receipt.",
+      base:  "images/portfolio/jotform/",
+      alt:   "Jotform — form and workflow sample ",
+      files: [
+        "Jotform-01.jpg",
+        "Jotform-02.jpg",
+        "Jotform-03.jpg",
+        "Jotform-04.jpg",
+        "Jotform-05.jpg",
+        "Jotform-06.jpg",
+        "Jotform-07.jpg",
+        "Jotform-08.jpg",
+        "Jotform-09.jpg",
+        "Jotform-10.jpg"
+      ],
+      rows: [
+        ["Project Title", "Payment & Workflow Form"],
+        ["Category", "Jotform"],
+        ["Software Used", "Jotform, Stripe, PayPal"],
+        ["Industry", "E-commerce & Service Business"],
+        ["Service Type", "Form Build, Payments & Approval Workflow"]
+      ],
+      blocks: [
+        { h: "Project Overview", p: "Orders that needed a quote, an approval and a payment were collapsed into one form. Totals calculate as the customer chooses options, payment is taken inline, and each submission routes to the right reviewer before a receipt goes out." },
+        { h: "Challenges", list: [
+          "Pricing depended on combinations of options and quantities.",
+          "Approval had to happen before payment was captured.",
+          "Receipts were being written by hand after each order.",
+          "Abandoned forms left no record to follow up on."
+        ] },
+        { h: "Solution", list: [
+          "Calculation fields driving a live total from every option.",
+          "Conditional routing that holds payment until approval clears.",
+          "An auto-generated PDF receipt sent on completion.",
+          "Partial submissions saved for follow-up."
+        ] },
+        { h: "Deliverables", tags: [
+          "Live Jotform build",
+          "Payment gateway setup",
+          "Approval workflow",
+          "PDF receipt template",
+          "Submission dashboard"
+        ] },
+        { h: "Client Benefits", list: [
+          "Quote, approval and payment finish in one sitting.",
+          "Pricing errors eliminated by calculated totals.",
+          "Receipts issued automatically and consistently.",
+          "Abandoned orders become recoverable leads."
+        ] }
+      ]
+    },
+
+    wordFormatting: {
+      label: "Microsoft Word Formatting",
+      title: "Corporate Report Formatting",
+      lede:  "A long-form Word document rebuilt on proper styles: automatic table of contents, consistent heading hierarchy, page numbering, captions and a reusable template.",
+      base:  "images/portfolio/word-formatting/",
+      alt:   "Microsoft Word Formatting — document sample ",
+      files: [
+        "Word-Formatting-01.jpg",
+        "Word-Formatting-02.jpg",
+        "Word-Formatting-03.jpg",
+        "Word-Formatting-04.jpg",
+        "Word-Formatting-05.jpg",
+        "Word-Formatting-06.jpg",
+        "Word-Formatting-07.jpg",
+        "Word-Formatting-08.jpg",
+        "Word-Formatting-09.jpg",
+        "Word-Formatting-10.jpg"
+      ],
+      rows: [
+        ["Project Title", "Corporate Report Formatting"],
+        ["Category", "Microsoft Word Formatting"],
+        ["Software Used", "Microsoft Word"],
+        ["Industry", "Corporate & Consulting"],
+        ["Service Type", "Document Formatting & Template Build"]
+      ],
+      blocks: [
+        { h: "Project Overview", p: "An annual report assembled by several authors carried a different look on every page. It was rebuilt on a single style set, so headings, tables, captions and numbering now update themselves and the team can reuse the file as a template." },
+        { h: "Challenges", list: [
+          "Direct formatting had been applied instead of styles throughout.",
+          "The contents page and figure numbers were maintained by hand.",
+          "Tables and images shifted whenever text was edited.",
+          "Section headers and page numbering broke between chapters."
+        ] },
+        { h: "Solution", list: [
+          "Direct formatting stripped and a full style set applied.",
+          "Automatic contents, caption numbering and cross-references.",
+          "Anchored images and tables with controlled text wrap.",
+          "Section breaks driving correct headers and page numbering."
+        ] },
+        { h: "Deliverables", tags: [
+          "Formatted .docx",
+          "Reusable .dotx template",
+          "Style guide",
+          "Print-ready PDF",
+          "Accessibility pass"
+        ] },
+        { h: "Client Benefits", list: [
+          "Edits no longer break the layout.",
+          "Contents and figure numbers stay correct automatically.",
+          "Every future report starts on-brand.",
+          "Hours of manual reformatting removed from each cycle."
+        ] }
+      ]
+    },
+
+    excelTemplates: {
+      label: "Microsoft Excel Templates",
+      title: "Business Tracking Dashboard",
+      lede:  "An Excel workbook with structured input sheets, validated dropdowns, protected formula ranges and a summary dashboard driven by charts and automated reporting formulas.",
+      base:  "images/portfolio/excel-templates/",
+      alt:   "Microsoft Excel Templates — workbook sample ",
+      files: [
+        "Excel-Templates-01.jpg",
+        "Excel-Templates-02.jpg",
+        "Excel-Templates-03.jpg",
+        "Excel-Templates-04.jpg",
+        "Excel-Templates-05.jpg",
+        "Excel-Templates-06.jpg",
+        "Excel-Templates-07.jpg",
+        "Excel-Templates-08.jpg",
+        "Excel-Templates-09.jpg",
+        "Excel-Templates-10.jpg"
+      ],
+      rows: [
+        ["Project Title", "Business Tracking Dashboard"],
+        ["Category", "Microsoft Excel Templates"],
+        ["Software Used", "Microsoft Excel"],
+        ["Industry", "Small Business Operations"],
+        ["Service Type", "Spreadsheet Template & Dashboard Build"]
+      ],
+      blocks: [
+        { h: "Project Overview", p: "Figures tracked across several ad-hoc spreadsheets were consolidated into one workbook: clean entry sheets the team fills in, a calculation layer nobody can overwrite, and a dashboard that answers the monthly reporting questions on a single screen." },
+        { h: "Challenges", list: [
+          "Separate files had drifted out of sync with each other.",
+          "Manual entry introduced typos that broke downstream formulas.",
+          "Formulas were being overwritten during normal data entry.",
+          "Monthly reporting was rebuilt by hand every cycle."
+        ] },
+        { h: "Solution", list: [
+          "A single workbook with one entry sheet per data source.",
+          "Data validation and dropdowns constraining every input.",
+          "Locked and protected formula ranges, with entry cells left open.",
+          "A dashboard of linked charts and summary formulas."
+        ] },
+        { h: "Deliverables", tags: [
+          "Excel workbook (.xlsx)",
+          "Dashboard sheet",
+          "Validated entry sheets",
+          "Protected formula layer",
+          "Usage instructions"
+        ] },
+        { h: "Client Benefits", list: [
+          "One source of truth instead of competing files.",
+          "Input errors caught at the point of entry.",
+          "Formulas survive everyday use.",
+          "Monthly reporting is a refresh, not a rebuild."
+        ] }
       ]
     }
 
@@ -4894,6 +5343,7 @@ window.addEventListener('scroll', () => {
   var TICK_MS     = 50;     /* progress-bar refresh */
   var DRAG_MIN    = 55;     /* px before a drag counts as a slide change */
   var CLICK_MAX   = 8;      /* px of movement still treated as a click */
+  var VIDEO_RE    = /\.(mp4|webm|ogv|ogg|mov|m4v)(\?|#|$)/i;
 
   /* ── Elements ──────────────────────────────────────────────────── */
   var overlay   = document.getElementById('pdfcsOverlay');
@@ -4901,6 +5351,8 @@ window.addEventListener('scroll', () => {
   if (!overlay || !zoomEl) return;
 
   var shell     = document.getElementById('pdfcsShell');
+  var headEl    = document.getElementById('pdfcsHead');
+  var panelEl   = document.getElementById('pdfcsPanel');
   var stage     = document.getElementById('pdfcsStage');
   var thumbsEl  = document.getElementById('pdfcsThumbs');
   var counterEl = document.getElementById('pdfcsCounter');
@@ -4908,7 +5360,6 @@ window.addEventListener('scroll', () => {
   var closeBtn  = document.getElementById('pdfcsClose');
   var prevBtn   = document.getElementById('pdfcsPrev');
   var nextBtn   = document.getElementById('pdfcsNext');
-  var ctaBtns   = document.querySelectorAll('.pdfcs-cta');
 
   var zCanvas   = document.getElementById('pdfcsZoomCanvas');
   var zImg      = document.getElementById('pdfcsZoomImg');
@@ -4922,7 +5373,7 @@ window.addEventListener('scroll', () => {
   var ring      = document.getElementById('cursorRing');
 
   /* ── State ─────────────────────────────────────────────────────── */
-  var builtKey = null;      /* which project's slides are currently in the DOM */
+  var builtKey = null;      /* which project's slides are in the DOM */
   var cfg = null;           /* active CASE_STUDIES entry */
   var slides = [];
   var thumbs = [];
@@ -4940,7 +5391,48 @@ window.addEventListener('scroll', () => {
     el.addEventListener('mouseleave', function () { ring.classList.remove('hovered'); });
   }
 
-  function srcOf(i) { return cfg.base + cfg.images[i]; }
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function isVideo(file) { return VIDEO_RE.test(file); }
+  function srcOf(i) { return cfg.base + cfg.files[i]; }
+
+  /* ── Render the header + details panel from the config ─────────── */
+  function renderProject(c) {
+    headEl.innerHTML =
+      '<div class="pdfcs-eyebrow">' + esc(c.label) + ' &nbsp;&middot;&nbsp; Case Study</div>' +
+      '<h2 class="pdfcs-title" id="pdfcsTitle">' + esc(c.title) + '</h2>' +
+      '<p class="pdfcs-lede">' + esc(c.lede) + '</p>';
+
+    var h = '<div class="pdfcs-panel-title">Project Details</div><div class="pdfcs-rows">';
+    c.rows.forEach(function (r) {
+      h += '<div class="pdfcs-row"><span class="pdfcs-k">' + esc(r[0]) +
+           '</span><span class="pdfcs-v' + (r[2] ? ' gold' : '') + '">' + esc(r[1]) +
+           '</span></div>';
+    });
+    h += '</div>';
+
+    c.blocks.forEach(function (b) {
+      h += '<div class="pdfcs-block"><div class="pdfcs-h">' + esc(b.h) + '</div>';
+      if (b.p) {
+        h += '<p class="pdfcs-p">' + esc(b.p) + '</p>';
+      }
+      if (b.list) {
+        h += '<ul class="pdfcs-ul">' + b.list.map(function (i) {
+          return '<li>' + esc(i) + '</li>';
+        }).join('') + '</ul>';
+      }
+      if (b.tags) {
+        h += '<div class="pdfcs-tags">' + b.tags.map(function (i) {
+          return '<span class="pdfcs-tag">' + esc(i) + '</span>';
+        }).join('') + '</div>';
+      }
+      h += '</div>';
+    });
+
+    h += '<a href="#contact" class="btn-primary pdfcs-cta">Start a Similar Project</a>';
+    panelEl.innerHTML = h;
+  }
 
   /* ── Build slides + thumbnails from the config (only when the project
         changes, so re-opening the same case study costs nothing) ──── */
@@ -4948,80 +5440,104 @@ window.addEventListener('scroll', () => {
     if (builtKey === key) return;
     builtKey = key;
     cfg = CASE_STUDIES[key];
-    total = cfg.images.length;
+    total = cfg.files.length;
 
-    slides.forEach(function (s) { s.parentNode.removeChild(s); });
+    slides.forEach(function (s) {
+      var v = s.querySelector('video');
+      if (v) { v.pause(); v.removeAttribute('src'); v.load(); }
+      s.parentNode.removeChild(s);
+    });
     slides = [];
     thumbs = [];
     thumbsEl.innerHTML = '';
 
-    cfg.images.forEach(function (file, i) {
-      /* Slide */
+    cfg.files.forEach(function (file, i) {
+      var video = isVideo(file);
+
+      /* ── Slide ── */
       var slide = document.createElement('div');
       slide.className = 'pdfcs-slide';
       slide.setAttribute('role', 'group');
-      slide.setAttribute('aria-label', 'Image ' + (i + 1) + ' of ' + total);
+      slide.setAttribute('aria-label', (video ? 'Video ' : 'Image ') + (i + 1) + ' of ' + total);
+      if (video) slide.setAttribute('data-video', '1');
 
-      var img = document.createElement('img');
-      img.src = srcOf(i);
-      img.alt = cfg.alt + (i + 1);
-      img.setAttribute('loading', i === 0 ? 'eager' : 'lazy');
-      img.setAttribute('decoding', 'async');
-      img.draggable = false;
-      img.addEventListener('error', function () {
-        img.setAttribute('data-broken', '1');
-        slide.setAttribute('data-missing', '1');
-      });
-      img.addEventListener('load', function () {
-        img.removeAttribute('data-broken');
-        slide.removeAttribute('data-missing');
-      });
+      var media;
+      if (video) {
+        media = document.createElement('video');
+        media.setAttribute('controls', '');
+        media.setAttribute('playsinline', '');
+        media.setAttribute('preload', 'metadata');   /* only metadata until played */
+        media.muted = true;
+        media.src = srcOf(i);
+        media.addEventListener('loadeddata', found);
+        media.addEventListener('pause', function () { restart(); });
+        media.addEventListener('ended', function () { restart(); });
+      } else {
+        media = document.createElement('img');
+        media.setAttribute('loading', i === 0 ? 'eager' : 'lazy');
+        media.setAttribute('decoding', 'async');
+        media.src = srcOf(i);
+        media.alt = cfg.alt + (i + 1);
+        media.addEventListener('load', found);
+      }
+      media.draggable = false;
+      media.addEventListener('error', missing);
+
+      function missing() { media.setAttribute('data-broken', '1'); slide.setAttribute('data-missing', '1'); }
+      function found()   { media.removeAttribute('data-broken'); slide.removeAttribute('data-missing'); }
 
       var ph = document.createElement('div');
       ph.className = 'pdfcs-ph';
       ph.innerHTML = '<div class="pdfcs-ph-num">' + (i + 1) + '</div>' +
-                     '<div class="pdfcs-ph-txt">Image coming soon</div>';
+                     '<div class="pdfcs-ph-txt">' +
+                     (video ? 'Video coming soon' : 'Image coming soon') + '</div>';
 
-      slide.appendChild(img);
+      slide.appendChild(media);
       slide.appendChild(ph);
       stage.insertBefore(slide, prevBtn);
       slides.push(slide);
 
-      /* Thumbnail */
+      /* ── Thumbnail ── */
       var t = document.createElement('button');
       t.type = 'button';
       t.className = 'pdfcs-thumb';
       t.setAttribute('role', 'tab');
-      t.setAttribute('aria-label', 'Go to image ' + (i + 1));
+      t.setAttribute('aria-label', 'Go to ' + (video ? 'video ' : 'image ') + (i + 1));
+      if (video) t.setAttribute('data-video', '1');
 
-      var ti = document.createElement('img');
-      ti.src = srcOf(i);
-      ti.alt = '';
-      ti.setAttribute('loading', 'lazy');
-      ti.setAttribute('decoding', 'async');
-      ti.draggable = false;
-      ti.addEventListener('error', function () {
-        ti.setAttribute('data-broken', '1');
-        t.setAttribute('data-missing', '1');
-      });
-      ti.addEventListener('load', function () {
-        ti.removeAttribute('data-broken');
-        t.removeAttribute('data-missing');
-      });
+      var tm;
+      if (video) {
+        tm = document.createElement('video');
+        tm.setAttribute('preload', 'metadata');
+        tm.setAttribute('playsinline', '');
+        tm.muted = true;
+        tm.src = srcOf(i) + '#t=0.5';          /* seek a frame in for a poster */
+        tm.addEventListener('loadeddata', tFound);
+      } else {
+        tm = document.createElement('img');
+        tm.setAttribute('loading', 'lazy');
+        tm.setAttribute('decoding', 'async');
+        tm.src = srcOf(i);
+        tm.alt = '';
+        tm.addEventListener('load', tFound);
+      }
+      tm.draggable = false;
+      tm.addEventListener('error', tMissing);
+
+      function tMissing() { tm.setAttribute('data-broken', '1'); t.setAttribute('data-missing', '1'); }
+      function tFound()   { tm.removeAttribute('data-broken'); t.removeAttribute('data-missing'); }
 
       var tph = document.createElement('span');
       tph.className = 'pdfcs-thumb-ph';
       tph.textContent = String(i + 1);
 
-      t.appendChild(ti);
+      t.appendChild(tm);
       t.appendChild(tph);
       t.addEventListener('click', function () { goTo(i); restart(); });
       bindCursor(t);
       thumbsEl.appendChild(t);
       thumbs.push(t);
     });
-
-    render();
   }
 
   /* ── Render current slide state ────────────────────────────────── */
@@ -5030,6 +5546,10 @@ window.addEventListener('scroll', () => {
       s.classList.toggle('is-active', i === index);
       s.classList.toggle('is-before', i < index);
       s.style.transform = '';
+      if (i !== index) {
+        var v = s.querySelector('video');
+        if (v && !v.paused) v.pause();       /* never leave audio playing offscreen */
+      }
     });
     thumbs.forEach(function (t, i) {
       t.classList.toggle('active', i === index);
@@ -5048,9 +5568,17 @@ window.addEventListener('scroll', () => {
   }
   function step(dir) { goTo(index + dir); }
 
+  function activeVideo() {
+    return slides[index] ? slides[index].querySelector('video') : null;
+  }
+  function videoBusy() {
+    var v = activeVideo();
+    return !!(v && !v.paused && !v.ended);
+  }
+
   /* ── Autoplay ──────────────────────────────────────────────────── */
   function tick() {
-    if (paused || hovering || zoomEl.classList.contains('open')) return;
+    if (paused || hovering || videoBusy() || zoomEl.classList.contains('open')) return;
     elapsed += TICK_MS;
     progressEl.style.width = Math.min(100, (elapsed / AUTOPLAY_MS) * 100) + '%';
     if (elapsed >= AUTOPLAY_MS) { elapsed = 0; step(1); }
@@ -5083,6 +5611,8 @@ window.addEventListener('scroll', () => {
 
     stage.addEventListener('pointerdown', function (e) {
       if (e.button !== undefined && e.button !== 0) return;
+      /* Let native video controls own their own gestures (scrubbing etc.) */
+      if (e.target && e.target.tagName === 'VIDEO') return;
       down = true; id = e.pointerId;
       startX = e.clientX; startY = e.clientY; dx = 0; moved = 0;
       paused = true;
@@ -5137,6 +5667,7 @@ window.addEventListener('scroll', () => {
   function resetZoom() { zScale = 1; zX = 0; zY = 0; applyZoom(); }
 
   function loadZoom() {
+    if (activeVideo()) { closeZoom(); return; }
     var slide = slides[index];
     var missing = slide && slide.getAttribute('data-missing') === '1';
     zImg.style.visibility = missing ? 'hidden' : 'visible';
@@ -5147,6 +5678,8 @@ window.addEventListener('scroll', () => {
   }
 
   function openZoom() {
+    /* Video slides use the player's own fullscreen button instead */
+    if (activeVideo()) return;
     loadZoom();
     zoomEl.classList.add('open');
     zoomEl.setAttribute('aria-hidden', 'false');
@@ -5249,18 +5782,16 @@ window.addEventListener('scroll', () => {
     var c = CASE_STUDIES[key];
     if (!c) return;
     lastFocus = document.activeElement;
+    renderProject(c);
     build(key);
-
-    /* Show only this project's header + details panel */
-    Array.prototype.forEach.call(overlay.querySelectorAll('[data-cs]'), function (el) {
-      el.hidden = el.getAttribute('data-cs') !== key;
-    });
-    overlay.setAttribute('aria-labelledby', c.titleId);
-
     goTo(0);
+    /* Only capture the page's scroll state on a genuine open, never when
+       switching projects while the modal is already up. */
+    if (!overlay.classList.contains('open')) {
+      prevOverflow = document.body.style.overflow;
+    }
     overlay.classList.add('open');
     overlay.setAttribute('aria-hidden', 'false');
-    prevOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     paused = false; hovering = false;
     start();
@@ -5271,6 +5802,8 @@ window.addEventListener('scroll', () => {
   function closeCaseStudy() {
     closeZoom();
     stop();
+    var v = activeVideo();
+    if (v && !v.paused) v.pause();
     overlay.classList.remove('open');
     overlay.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = prevOverflow;
@@ -5281,8 +5814,10 @@ window.addEventListener('scroll', () => {
   overlay.addEventListener('click', function (e) {
     if (e.target === overlay || e.target === shell) closeCaseStudy();
   });
-  Array.prototype.forEach.call(ctaBtns, function (b) {
-    b.addEventListener('click', closeCaseStudy);
+  /* Delegated so the CTA keeps working after the panel is re-rendered */
+  panelEl.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('.pdfcs-cta') : null;
+    if (a) closeCaseStudy();
   });
 
   /* ── Keyboard: arrows navigate, ESC closes zoom first, then modal ── */
@@ -5296,6 +5831,9 @@ window.addEventListener('scroll', () => {
       if (zoomOpen) closeZoom(); else closeCaseStudy();
       return;
     }
+    /* Leave the arrow keys to the video player while it has focus */
+    if (document.activeElement && document.activeElement.tagName === 'VIDEO') return;
+
     if (e.key === 'ArrowLeft')  { e.preventDefault(); step(-1); restart(); }
     if (e.key === 'ArrowRight') { e.preventDefault(); step(1);  restart(); }
     if (e.key === 'Home')       { e.preventDefault(); goTo(0);  restart(); }
