@@ -59,6 +59,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   "@type": "OfferCatalog",
   "name": "SBTEXMEDIA Services",
   "itemListElement": [
+    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Social Media Automation", "description": "Make.com-based social media workflow automation designed to reduce repetitive publishing tasks and connect supported content tools and social platforms into streamlined workflows." } },
     { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "PDF Editing", "description": "Professional edits to text, images, layout and structure in any PDF document." } },
     { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Fillable PDF Forms", "description": "Custom interactive PDF forms with fields, checkboxes, dropdowns and digital signatures." } },
     { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Google Forms", "description": "Professional Google Forms including business forms, surveys, quizzes, conditional logic, registration forms, client intake forms, feedback forms and order forms." } },
@@ -2982,6 +2983,12 @@ style="width:120%;height:120%;object-fit:cover;object-position:center top;">
       </div>
     </div>
     <div class="services-grid">
+      <a class="service-card reveal" href="social-media-automation.html">
+        <div class="service-icon" data-icon="social-media-automation"></div>
+        <h3 class="service-name">Social Media Automation</h3>
+        <p class="service-desc">Streamline your publishing workflow with Make.com automation — prepared content moves through a coordinated process across supported platforms, replacing the repetitive manual steps that consume your week.</p>
+        <div class="service-arrow">&rarr;</div>
+      </a>
       <a class="service-card reveal" href="pdf-editing.html">
         <div class="service-icon" data-icon="pdf-editing"></div>
         <h3 class="service-name">PDF Editing</h3>
@@ -3085,6 +3092,7 @@ style="width:120%;height:120%;object-fit:cover;object-position:center top;">
         </div>
         <div class="portfolio-filters" id="filterGroup">
           <button class="filter-btn active" data-filter="all" data-service="all">All</button>
+          <button class="filter-btn" data-filter="Social Media Automation" data-service="social-media-automation">Social Media Automation</button>
           <button class="filter-btn" data-filter="Fillable Pdf forms" data-service="fillable-pdf">Fillable PDF Forms</button>
           <button class="filter-btn" data-filter="design" data-service="graphic-design">Graphic Design</button>
             <button class="filter-btn" data-filter="logo" data-service="logo-design">Logo Design</button>
@@ -3243,6 +3251,16 @@ View Case Study
         <div class="portfolio-item-meta">
           <div class="portfolio-item-cat">Microsoft Excel Templates</div>
           <div class="portfolio-item-title">Business Tracking Dashboard</div>
+        </div>
+      </div>
+      <div class="portfolio-item" data-category="social-media-automation" data-title="Social Media Automation Workflow" data-service="social-media-automation">
+        <div class="portfolio-item-img" data-icon="social-media-automation"></div>
+        <div class="portfolio-overlay">
+          <button class="portfolio-view-btn" onclick="openSbtexCaseStudy('socialMediaAutomation')">View Case Study</button>
+        </div>
+        <div class="portfolio-item-meta">
+          <div class="portfolio-item-cat">Social Media Automation</div>
+          <div class="portfolio-item-title">Social Media Automation Workflow</div>
         </div>
       </div>
     </div>
@@ -3456,6 +3474,7 @@ View Case Study
         <div class="tool-card"><div class="tool-icon" data-icon="zapier"></div><div class="tool-name">Zapier</div></div>
         <div class="tool-card"><div class="tool-icon" data-icon="google-forms"></div><div class="tool-name">Google Forms</div></div>
         <div class="tool-card"><div class="tool-icon" data-icon="jotform"></div><div class="tool-name">Jotform</div></div>
+        <div class="tool-card"><div class="tool-icon" data-icon="make-automation"></div><div class="tool-name">Make.com</div></div>
       </div>
     </div>
   </div>
@@ -3789,6 +3808,10 @@ View Case Study
    TO ADD A SERVICE:  add one slug here + data-icon="slug" on the container. */
 const SBTEX_ICONS = {
 
+  /* ---- Automation & workflow ---- */
+  'social-media-automation': '<circle cx="4.6" cy="5.6" r="2.1"/><circle cx="4.6" cy="18.4" r="2.1"/><circle cx="19.4" cy="12" r="2.1"/><rect x="9.4" y="9.4" width="5.2" height="5.2" rx="1.2"/><path d="M6.3 7.1l3.1 3.1M6.3 16.9l3.1-3.1M14.6 12h2.7"/>',
+  'make-automation':    '<circle cx="5.2" cy="12" r="2.3"/><circle cx="12" cy="6.4" r="2.3"/><circle cx="12" cy="17.6" r="2.3"/><circle cx="18.8" cy="12" r="2.3"/><path d="M7.1 10.6l3-2.5M7.1 13.4l3 2.5M13.9 8.1l3 2.5M13.9 15.9l3-2.5"/>',
+
   /* ---- Documents & forms ---- */
   'pdf-editing':        '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4"/><path d="M14 3v5h5"/><path d="M8.5 12.5h4"/><path d="M19.3 13.5a1.9 1.9 0 0 1 2.7 2.7L17.9 20.3l-3.3.6.6-3.3z"/>',
   'fillable-pdf':       '<rect x="4" y="3" width="16" height="18" rx="2"/><rect x="7" y="7" width="3.6" height="3.6" rx="0.7"/><path d="M7.9 8.8l0.9 0.9 1.6-1.8"/><path d="M13 8.8h4"/><path d="M7 14.2h10"/><path d="M7 17.6h6"/>',
@@ -4002,6 +4025,8 @@ if (skillsList) skillObserver.observe(skillsList);
    Slug on a filter button  = data-service
    Slug on a portfolio card = data-service                                 */
 const SBTEX_SERVICES = [
+  { slug: 'social-media-automation', label: 'Social Media Automation',
+    keywords: ['social media automation','social media automation service','make.com automation','make.com','make automation','social media workflow','social media posting automation','posting automation','social media scheduling automation','scheduling automation','content automation','social media workflow automation','make.com social media automation','workflow automation','automation','no-code automation','content workflow','publishing workflow'] },
   { slug: 'pdf-editing',       label: 'PDF Editing',
     keywords: ['pdf editing','pdf','edit pdf','document editing','contract','acrobat'] },
   { slug: 'fillable-pdf',      label: 'Fillable PDF Forms',
@@ -5382,11 +5407,72 @@ window.addEventListener('scroll', () => {
           "Monthly reporting is a refresh, not a rebuild."
         ] }
       ]
+    },
+
+    socialMediaAutomation: {
+      label: "Social Media Automation",
+      title: "Social Media Automation Workflow",
+      lede:  "A Make.com scenario that takes prepared content from a single source sheet and moves it through processing, approval and publishing steps across the platforms the account is connected to.",
+      base:  "images/portfolio/social-media-automation/",
+      alt:   "Social Media Automation Workflow — Make.com scenario sample ",
+      autoplayMs: 5000,
+      files: [
+        "social-media-automation-01.jpg",
+        "social-media-automation-02.jpg",
+        "social-media-automation-03.jpg",
+        "social-media-automation-04.jpg",
+        "social-media-automation-05.jpg",
+        "social-media-automation-06.jpg",
+        "social-media-automation-07.jpg",
+        "social-media-automation-08.jpg",
+        "social-media-automation-09.jpg",
+        "social-media-automation-10.jpg"
+      ],
+      rows: [
+        ["Project Title", "Social Media Automation Workflow"],
+        ["Category", "Social Media Automation"],
+        ["Platform Used", "Make.com"],
+        ["Service Type", "Workflow Automation & Scenario Build"],
+        ["Typical Sources", "Google Sheets, Airtable, Forms, Cloud Storage"],
+        ["Scope", "Built to the client's tools and permissions", true]
+      ],
+      blocks: [
+        { h: "Project Overview", p: "A content workflow that lived in a spreadsheet and a series of copy-paste steps was mapped and rebuilt as a Make.com scenario. Prepared rows are picked up on a schedule, the text and image fields are formatted for each destination, an approval step gates anything not yet signed off, and the result is handed to whichever platform modules the account is connected to. What gets published automatically, and where, depends entirely on the integrations and permissions available for that account." },
+        { h: "How the Workflow Is Structured", list: [
+          "Trigger: a scheduled check of the content source, or a webhook fired by a form or app.",
+          "Processing: filters, routers and data mapping shape each row into the fields a destination expects.",
+          "Approval: an optional gate so nothing is published before a human has confirmed it.",
+          "Publishing: handed to the connected platform modules that support the required action.",
+          "Notification: a confirmation message and an error path when a step does not complete."
+        ] },
+        { h: "Honest Scope Notes", list: [
+          "Available actions depend on Make.com integrations, platform APIs and account permissions.",
+          "Not every platform supports automated publishing for every post type or account tier.",
+          "Where direct publishing is not available, the workflow prepares and schedules instead.",
+          "Automation reduces repetitive work — it does not guarantee reach, engagement or sales."
+        ] },
+        { h: "Tools Involved", tags: [
+          "Make.com",
+          "Google Sheets",
+          "Airtable",
+          "Webhooks",
+          "Cloud storage",
+          "Routers & filters",
+          "Error handling"
+        ] },
+        { h: "Client Benefits", list: [
+          "Repetitive copy-paste steps removed from the publishing routine.",
+          "One prepared source instead of the same content re-entered per platform.",
+          "A consistent, documented process the team can follow.",
+          "A scenario that can be extended as new tools are added."
+        ] }
+      ]
     }
 
   };
 
-  var AUTOPLAY_MS = 2000;   /* autoplay interval */
+  var AUTOPLAY_MS = 2000;   /* default autoplay interval; a case study may
+                               override it with its own autoplayMs value */
   var TICK_MS     = 50;     /* progress-bar refresh */
   var DRAG_MIN    = 55;     /* px before a drag counts as a slide change */
   var CLICK_MAX   = 8;      /* px of movement still treated as a click */
@@ -5624,11 +5710,17 @@ window.addEventListener('scroll', () => {
   }
 
   /* ── Autoplay ──────────────────────────────────────────────────── */
+  /* Each case study may set its own autoplayMs; everything else keeps
+     the default AUTOPLAY_MS, so existing timings are unchanged. */
+  function autoplayMs() {
+    return (cfg && cfg.autoplayMs) || AUTOPLAY_MS;
+  }
   function tick() {
     if (paused || hovering || videoBusy() || zoomEl.classList.contains('open')) return;
+    var ms = autoplayMs();
     elapsed += TICK_MS;
-    progressEl.style.width = Math.min(100, (elapsed / AUTOPLAY_MS) * 100) + '%';
-    if (elapsed >= AUTOPLAY_MS) { elapsed = 0; step(1); }
+    progressEl.style.width = Math.min(100, (elapsed / ms) * 100) + '%';
+    if (elapsed >= ms) { elapsed = 0; step(1); }
   }
   function start() {
     stop();
